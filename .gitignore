@@ -1,0 +1,38 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Next.js
+.next/
+client/.next/
+out/
+client/out/
+
+# Build/output
+dist/
+build/
+.cache/
+.turbo/
+.vercel/
+
+# Environment
+.env
+.env.*
+client/.env
+server/.env
+
+# OS
+.DS_Store
+
+# Server runtime data
+server/uploads/
+server/gallery-data.json
+
+# Logs
+logs/
+*.log
+
+
