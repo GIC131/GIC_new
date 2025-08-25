@@ -1,10 +1,17 @@
+// client/next.config.mjs
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    unoptimized: true,
+    remotePatterns: [
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '5000',
+        pathname: '/uploads/**',
+      },
+    ],
   },
-  output: 'export',
-  trailingSlash: true,
 };
 
 export default nextConfig;
