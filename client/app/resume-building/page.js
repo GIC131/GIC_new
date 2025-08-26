@@ -2,6 +2,11 @@
 
 import Link from 'next/link';
 
+export const metadata = {
+  title: 'Professional Resume Building Services & Tips',
+  description: 'Craft a standout resume that gets you noticed by top recruiters. Get expert tips and professional resume writing support to land more interviews.',
+};
+
 const ResumeBuildingPage = () => {
   return (
     <div className="min-h-screen bg-primary py-20">

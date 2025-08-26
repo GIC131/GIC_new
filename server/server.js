@@ -24,7 +24,8 @@ app.use(express.json());
 // --- Define Routes ---
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/gallery', require('./routes/galleryRoutes'));
-app.use('/api/users', require('./routes/userRoutes')); // Correctly grouped with other routes
+app.use('/api/users', require('./routes/userRoutes'));
+app.use('/api/questions', require('./routes/questionRoutes')); // Correctly grouped with other routes
 
 // --- Serve Static Files (Uploaded Images) ---
 // This tells Node.js that if a request comes in for '/uploads', it should serve files from the 'uploads' directory.

@@ -1,16 +1,13 @@
 // client/app/admin-dashboard/layout.js
 import PrivateRoute from "@/components/PrivateRoute";
-import AdminSidebar from "./components/AdminSidebar";
+import AdminLayout from "./components/AdminLayout"; // <-- Import the new layout
 
-export default function AdminDashboardLayout({ children }) {
+export default function DashboardLayout({ children }) {
     return (
         <PrivateRoute>
-            <div className="flex min-h-screen">
-                <AdminSidebar />
-                <main className="flex-grow p-8 bg-primary">
-                    {children}
-                </main>
-            </div>
+            <AdminLayout>
+                {children}
+            </AdminLayout>
         </PrivateRoute>
     );
 }

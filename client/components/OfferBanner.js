@@ -56,7 +56,7 @@ const OfferBanner = () => {
             onClick={handleButtonClick}
             className="bg-primary text-accent font-bold py-3 px-6 rounded-full hover:bg-sky-100 transition-colors duration-300"
           >
-            Unlock Everything at $99
+            Unlock Everything at ₹99
           </button>
         </div>
       </div>

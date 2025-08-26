@@ -1,0 +1,11 @@
+# client/public/robots.txt
+User-agent: *
+Allow: /
+
+# Disallow crawling of authentication and admin pages
+Disallow: /login
+Disallow: /register
+Disallow: /dashboard
+Disallow: /admin-dashboard/
+
+Sitemap: https://www.getinterviewconfidence.com/sitemap.xml
