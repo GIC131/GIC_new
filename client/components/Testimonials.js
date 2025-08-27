@@ -4,7 +4,7 @@ const testimonialsData = [
   {
     quote: "The career guidance program transformed me think about my future. The engagement levels have never been higher.",
     author: "Mr. Amit Kumar",
-    title: "Sr Developer, Infosys"
+    title: "Sr Developer, InfroHigh"
   },
   {
     quote: "Our graduates are now securing placements at top companies thanks to the comprehensive interview coaching and resume optimization.",

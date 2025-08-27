@@ -4,11 +4,11 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState } from 'react';
-import { useAuth } from '@/context/AuthContext'; // Import useAuth
+import { useAuth } from '@/context/AuthContext';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { isAuthenticated, user, logout } = useAuth(); // Get auth state
+  const { isAuthenticated, user, logout } = useAuth();
 
   const navLinks = [
     { text: "Services", link: "/#services" },
@@ -44,32 +44,33 @@ const Navbar = () => {
   return (
     <header className="bg-secondary/80 backdrop-blur-sm sticky top-0 z-50">
       <nav className="container mx-auto px-6 py-4 flex justify-between items-center">
-        <Link href="/" className="flex items-center space-x-2">
+        {/* Updated this Link component */}
+        <Link href="/" className="flex items-center space-x-2 flex-shrink-0">
           <Image src="/images/logo.jpg" alt="GIC Logo" width={40} height={40} />
-          <span className="text-xl font-bold text-light-text">GetInterviewConfidence</span>
+          <span className="text-xl font-bold text-light-text hidden sm:inline">GetInterviewConfidence</span>
         </Link>
 
-        {/* Desktop Menu */}
-        <div className="hidden md:flex items-center space-x-8">
+        {/* Desktop Menu - Adjusted responsive classes */}
+        <div className="hidden lg:flex items-center space-x-8">
           {navLinks.map((item) => (
-            <Link key={item.text} href={item.link} className="text-dark-text hover:text-accent transition-colors duration-300">
+            <Link key={item.text} href={item.link} className="text-dark-text hover:text-accent transition-colors duration-300 whitespace-nowrap">
               {item.text}
             </Link>
           ))}
           {isAuthenticated ? authLinks : guestLinks}
         </div>
 
-        {/* Mobile Menu Button */}
-        <div className="md:hidden">
+        {/* Mobile Menu Button - Changed from md:hidden to lg:hidden */}
+        <div className="lg:hidden">
           <button onClick={() => setIsOpen(!isOpen)} className="text-light-text focus:outline-none">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={isOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"}></path></svg>
           </button>
         </div>
       </nav>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu - Changed from md:hidden to lg:hidden */}
       {isOpen && (
-        <div className="md:hidden px-6 pb-4 flex flex-col items-start space-y-4">
+        <div className="lg:hidden px-6 pb-4 flex flex-col items-start space-y-4">
           {navLinks.map((item) => (
              <Link key={item.text} href={item.link} className="text-dark-text hover:text-accent transition-colors duration-300" onClick={() => setIsOpen(false)}>
               {item.text}

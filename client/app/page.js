@@ -1,5 +1,6 @@
 // client/app/page.js
 import Hero from "@/components/Hero";
+import Certifications from "@/components/Certifications";
 import OfferBanner from "@/components/OfferBanner";
 import Features from "@/components/Features";
 import FounderSection from "@/components/Foundersection";
@@ -18,6 +19,7 @@ export default function Home() {
   return (
     <div>
       <Hero />
+      <Certifications /> 
       <OfferBanner />
       <Features />
       <FounderSection />
