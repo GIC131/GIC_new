@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 const ContactPage = () => {
   // **IMPORTANT**: Replace this with your actual Google Form link
-  const googleFormLink = "https://docs.google.com/forms/d/e/1FAIpQLSe5MiNOkT8J0CgfVWDbtc7ag7ux4LksphcHpZ9EfE8lTV99Qg/viewform";
+  const googleFormLink = "https://forms.gle/QrwQcPD81Y1n9VVw8";
 
   return (
     <div className="min-h-screen bg-primary flex items-center justify-center py-20">

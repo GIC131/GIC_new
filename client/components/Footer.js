@@ -33,7 +33,7 @@ const Footer = () => {
             <div className="mt-4 flex flex-col space-y-2">
               <p className="text-dark-text">Email: <a href="mailto:hr@getinteviewconfidence.com" className="hover:text-accent">hr@getinteviewconfidence.com</a></p>
               <p className="text-dark-text">Phone: <a href="tel:+919674168149" className="hover:text-accent">+91 96741 68149</a></p>
-              <a href="https://docs.google.com/forms/d/e/1FAIpQLSe5MiNOkT8J0CgfVWDbtc7ag7ux4LksphcHpZ9EfE8lTV99Qg/viewform" target="_blank" rel="noopener noreferrer" className="inline-block mt-2 bg-accent text-primary font-semibold px-4 py-2 rounded-lg hover:bg-sky-400 transition-colors duration-300 w-fit">
+              <a href="https://forms.gle/QrwQcPD81Y1n9VVw8" target="_blank" rel="noopener noreferrer" className="inline-block mt-2 bg-accent text-primary font-semibold px-4 py-2 rounded-lg hover:bg-sky-400 transition-colors duration-300 w-fit">
                 Contact HR
               </a>
             </div>
