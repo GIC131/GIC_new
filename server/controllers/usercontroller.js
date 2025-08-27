@@ -8,4 +8,14 @@ const getAllUsers = async (req, res) => {
     res.status(500).send('Server Error');
   }
 };
-module.exports = { getAllUsers };
+
+const getUserCount = async (req, res) => {
+    try {
+        const count = await User.countDocuments();
+        res.json({ count });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+};
+module.exports = { getAllUsers, getUserCount };
