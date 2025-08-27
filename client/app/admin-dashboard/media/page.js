@@ -2,18 +2,18 @@
 'use client';
 
 import ImageUpload from "@/components/ImageUpload";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import Image from 'next/image';
-import { useAuth } from '@/context/AuthContext'; // <-- Import useAuth
+import { useAuth } from '@/context/AuthContext';
 
 const MediaManagementPage = () => {
-    const { isAuthenticated } = useAuth(); // <-- Get the authentication status
+    const { isAuthenticated } = useAuth();
     const [media, setMedia] = useState([]);
     const [loading, setLoading] = useState(true);
     const backendUrl = process.env.NEXT_PUBLIC_API_URL;
 
-    const fetchMedia = async () => {
+    const fetchMedia = useCallback(async () => {
         setLoading(true);
         try {
             const res = await axios.get(`${backendUrl}/api/gallery`);
@@ -23,23 +23,21 @@ const MediaManagementPage = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [backendUrl]);
 
     useEffect(() => {
-        // Only fetch media if the user is authenticated
         if (isAuthenticated) {
             fetchMedia();
         } else {
-            // If for some reason the user is not authenticated, stop loading
             setLoading(false); 
         }
-    }, [isAuthenticated]); // <-- Re-run this effect when authentication status changes
+    }, [isAuthenticated, fetchMedia]);
 
     const handleDelete = async (id) => {
         if (confirm('Are you sure you want to delete this media item permanently?')) {
             try {
                 await axios.delete(`${backendUrl}/api/gallery/${id}`);
-                fetchMedia(); // Refresh the media list
+                fetchMedia();
             } catch (error) {
                 console.error("Failed to delete media", error);
                 alert('Deletion failed. Please try again.');
