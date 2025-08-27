@@ -43,7 +43,7 @@ export const AuthProvider = ({ children }) => {
     loadUser();
   }, []);
 
-  const login = async (email, password) => {
+const login = async (email, password) => {
     const body = JSON.stringify({ email, password });
     const config = { headers: { 'Content-Type': 'application/json' } };
 
@@ -51,11 +51,12 @@ export const AuthProvider = ({ children }) => {
       const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`, body, config);
       localStorage.setItem('token', res.data.token);
       setAuthToken(res.data.token);
-
+      
       const userRes = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/auth`);
       setUser(userRes.data);
       setIsAuthenticated(true);
 
+      // --- THIS IS THE LOGIC WE ARE CHANGING ---
       if (userRes.data.role === 'Admin' || userRes.data.role === 'Super Admin') {
         router.push('/admin-dashboard');
       } else {

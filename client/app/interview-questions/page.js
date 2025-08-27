@@ -1,20 +1,29 @@
 // client/app/interview-questions/page.js
 
-// Fetch data on the server for better SEO
 async function getDynamicQuestions() {
   try {
-    // We use fetch here because this is a Server Component
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/questions`, { cache: 'no-store' });
-    if (!res.ok) return [];
+    // Use the server-side environment variable. This is more reliable.
+    const apiUrl = process.env.API_URL || 'http://localhost:5000';
+
+    const res = await fetch(`${apiUrl}/api/questions`, { cache: 'no-store' });
+
+    if (!res.ok) {
+      console.error('Failed to fetch dynamic questions:', res.statusText);
+      return [];
+    }
     return res.json();
   } catch (error) {
-    console.error("Failed to fetch dynamic questions", error);
+    console.error("An error occurred while fetching questions:", error);
     return [];
   }
 }
 
+export const metadata = {
+  title: 'Top Interview Questions & Answers for Job Seekers',
+  description: 'Prepare to ace your next job interview. Practice common HR and technical questions with expert tips and answer strategies from career coaches.',
+}
+
 const InterviewQuestionsPage = async () => {
-  // These are your original, static questions
   const staticQuestions = [
     { question: "Tell me about yourself.", answerTip: "Structure your answer around your past, present, and future career goals." },
     { question: "What are your strengths and weaknesses?", answerTip: "Choose a real weakness and show how you are working to improve it." },
@@ -49,6 +58,7 @@ const InterviewQuestionsPage = async () => {
                 </p>
               </li>
             ))}
+            {allQuestions.length === 0 && <p className="text-dark-text">No questions found. Please check back later.</p>}
           </ul>
         </div>
       </div>

@@ -4,7 +4,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 
-const ImageUpload = () => {
+const ImageUpload = ({ onUploadSuccess }) => {
   const [file, setFile] = useState(null);
   const [title, setTitle] = useState('');
   const [message, setMessage] = useState('');
@@ -29,17 +29,22 @@ const ImageUpload = () => {
 
     try {
       // The auth token is automatically sent thanks to our AuthContext setup
-      await axios.post('http://localhost:5000/api/gallery/upload', formData, {
+      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/gallery/upload`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
-      setMessage('Image uploaded successfully!');
+
+      setMessage('Media uploaded successfully!');
       setFile(null);
       setTitle('');
       e.target.reset(); // Reset the form fields
+
+      if (onUploadSuccess) {
+        onUploadSuccess(); // This will trigger the media list to refresh
+      }
     } catch (err) {
-      setMessage('Upload failed. Please try again.');
+      setMessage(err.response?.data?.msg || 'Upload failed. Please try again.');
       console.error(err);
     } finally {
         setLoading(false);
@@ -48,10 +53,10 @@ const ImageUpload = () => {
 
   return (
     <div className="bg-secondary p-8 rounded-lg border border-slate-700 max-w-lg mx-auto">
-      <h2 className="text-2xl font-bold text-light-text mb-6">Upload New Gallery Image</h2>
+      <h2 className="text-2xl font-bold text-light-text mb-6">Upload New Media</h2>
       <form onSubmit={onSubmit} className="space-y-6">
         <div>
-          <label htmlFor="title" className="block text-sm font-medium text-dark-text mb-2">Image Title (Optional)</label>
+          <label htmlFor="title" className="block text-sm font-medium text-dark-text mb-2">Title (Optional)</label>
           <input
             type="text"
             id="title"
@@ -62,7 +67,7 @@ const ImageUpload = () => {
           />
         </div>
         <div>
-          <label htmlFor="file" className="block text-sm font-medium text-dark-text mb-2">Image File</label>
+          <label htmlFor="file" className="block text-sm font-medium text-dark-text mb-2">Image or Video File</label>
           <input
             type="file"
             id="file"
@@ -78,7 +83,7 @@ const ImageUpload = () => {
             disabled={loading}
             className="w-full bg-accent text-primary font-bold py-3 px-4 rounded-lg hover:bg-sky-400 transition-colors duration-300 disabled:bg-slate-500 disabled:cursor-not-allowed"
           >
-            {loading ? 'Uploading...' : 'Upload Image'}
+            {loading ? 'Uploading...' : 'Upload Media'}
           </button>
         </div>
       </form>

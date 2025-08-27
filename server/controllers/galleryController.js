@@ -1,13 +1,14 @@
 // server/controllers/galleryController.js
 
 const Image = require('../models/imageModel');
+const fs = require('fs');
+const path = require('path');
 
 // @desc    Get all images
 // @route   GET /api/gallery
 const getImages = async (req, res) => {
   try {
-    // Find all images and sort by the newest first
-    const images = await Image.find().sort({ createdAt: -1 });
+    const images = await Image.find({}).sort({ createdAt: -1 });
     res.json(images);
   } catch (err) {
     console.error(err.message);
@@ -24,11 +25,8 @@ const uploadImage = async (req, res) => {
 
   try {
     const newImage = new Image({
-      // The path to the image will be constructed on the frontend
-      // We store the filename which multer provides
       imageUrl: `/uploads/${req.file.filename}`,
       uploadedBy: req.user.id,
-      // You could add title/description from req.body if needed
       title: req.body.title || 'Gallery Image'
     });
 
@@ -40,7 +38,40 @@ const uploadImage = async (req, res) => {
   }
 };
 
+// @desc    Delete a media item
+// @route   DELETE /api/gallery/:id
+const deleteMedia = async (req, res) => {
+  try {
+    const media = await Image.findById(req.params.id);
+
+    if (!media) {
+      return res.status(404).json({ msg: 'Media not found' });
+    }
+
+    // Construct the file path relative to the project root
+    const filePath = path.join(__dirname, '..', media.imageUrl);
+
+    // Delete the file from the server's filesystem
+    fs.unlink(filePath, (err) => {
+      if (err) {
+        console.error('Failed to delete file from server:', err);
+        // We can still proceed to delete from DB, but we log the error
+      }
+    });
+    
+    // Remove the record from the database
+    await media.deleteOne();
+
+    res.json({ msg: 'Media item removed' });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+};
+
+
 module.exports = {
   getImages,
   uploadImage,
+  deleteMedia,
 };

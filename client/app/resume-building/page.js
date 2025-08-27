@@ -42,12 +42,12 @@ const ResumeBuildingPage = () => {
           </div>
         </div>
 
-        <div className="mt-12">
-           <Link href="/path/to/resume-template.pdf" download
-             className="bg-accent text-primary font-bold px-8 py-3 rounded-lg hover:bg-sky-400 transition-transform duration-300 hover:scale-105">
-             Download Our Template
-           </Link>
-        </div>
+            <div className="mt-12">
+               <Link href="/resume-template"
+                 className="bg-accent text-primary font-bold px-8 py-3 rounded-lg hover:bg-sky-400 transition-transform duration-300 hover:scale-105">
+                 View Editable Template
+               </Link>
+            </div>
       </div>
     </div>
   );
