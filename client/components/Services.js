@@ -1,6 +1,6 @@
 // client/components/Services.js
 
-// A reusable card component for individual services
+
 const ServiceCard = ({ category, title, duration, details }) => (
   <div className="bg-secondary p-6 rounded-lg border border-slate-700 h-full flex flex-col">
     <div className="flex-grow">
@@ -14,7 +14,7 @@ const ServiceCard = ({ category, title, duration, details }) => (
   </div>
 );
 
-// Data for the services, taken from your JSON
+
 const servicesData = {
   forSchools: {
     title: "FOR SCHOOLS",
@@ -54,7 +54,7 @@ const Services = () => {
           </p>
         </div>
 
-        {/* Services for Schools */}
+        
         <div className="mt-16">
           <h3 className="text-2xl font-bold text-accent mb-1 uppercase tracking-wider">{servicesData.forSchools.title}</h3>
           <p className="text-lg text-dark-text mb-8">{servicesData.forSchools.description}</p>
@@ -65,7 +65,6 @@ const Services = () => {
           </div>
         </div>
 
-        {/* Services for Colleges */}
         <div className="mt-20">
           <h3 className="text-2xl font-bold text-accent mb-1 uppercase tracking-wider">{servicesData.forColleges.title}</h3>
           <p className="text-lg text-dark-text mb-8">{servicesData.forColleges.description}</p>

@@ -1,8 +1,7 @@
 // server/controllers/questionController.js
 const Question = require('../models/questionModel');
 
-// @desc    Get all questions
-// @route   GET /api/questions
+
 const getQuestions = async (req, res) => {
   try {
     const questions = await Question.find({}).sort({ createdAt: -1 });
@@ -12,8 +11,7 @@ const getQuestions = async (req, res) => {
   }
 };
 
-// @desc    Add a new question
-// @route   POST /api/questions
+
 const addQuestion = async (req, res) => {
   const { question, answerTip, category } = req.body;
   try {
@@ -25,8 +23,7 @@ const addQuestion = async (req, res) => {
   }
 };
 
-// @desc    Delete a question
-// @route   DELETE /api/questions/:id
+
 const deleteQuestion = async (req, res) => {
   try {
     const question = await Question.findById(req.params.id);

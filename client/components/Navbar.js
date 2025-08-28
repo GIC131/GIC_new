@@ -44,13 +44,13 @@ const Navbar = () => {
   return (
     <header className="bg-secondary/80 backdrop-blur-sm sticky top-0 z-50">
       <nav className="container mx-auto px-6 py-4 flex justify-between items-center">
-        {/* Updated this Link component */}
+        
         <Link href="/" className="flex items-center space-x-2 flex-shrink-0">
           <Image src="/images/logo.jpg" alt="GIC Logo" width={40} height={40} />
           <span className="text-xl font-bold text-light-text hidden sm:inline">GetInterviewConfidence</span>
         </Link>
 
-        {/* Desktop Menu - Adjusted responsive classes */}
+       
         <div className="hidden lg:flex items-center space-x-8">
           {navLinks.map((item) => (
             <Link key={item.text} href={item.link} className="text-dark-text hover:text-accent transition-colors duration-300 whitespace-nowrap">
@@ -60,7 +60,7 @@ const Navbar = () => {
           {isAuthenticated ? authLinks : guestLinks}
         </div>
 
-        {/* Mobile Menu Button - Changed from md:hidden to lg:hidden */}
+       
         <div className="lg:hidden">
           <button onClick={() => setIsOpen(!isOpen)} className="text-light-text focus:outline-none">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={isOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"}></path></svg>
@@ -68,7 +68,7 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* Mobile Menu - Changed from md:hidden to lg:hidden */}
+      
       {isOpen && (
         <div className="lg:hidden px-6 pb-4 flex flex-col items-start space-y-4">
           {navLinks.map((item) => (

@@ -13,7 +13,7 @@ const imageSchema = new mongoose.Schema({
   },
   uploadedBy: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User', // This creates a reference to the User model
+    ref: 'User', 
     required: true,
   },
 }, {

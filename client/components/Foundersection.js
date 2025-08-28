@@ -14,19 +14,19 @@ const FounderSection = () => {
       <div className="container mx-auto px-6">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           {/* Left Side: Image */}
-          <div className="flex justify-center md:justify-end">
-            <div className="relative w-72 h-72 md:w-96 md:h-96 overflow-hidden border-4 border-accent shadow-2xl">
-              <Image
-                src="/images/founder.png"
-                alt="Ayushe Mandal, Founder & CEO"
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 60vw, 35vw"
-              />
-            </div>
-          </div>
+<div className="flex justify-center md:justify-end">
+  <div className="relative w-96 h-96 md:w-[30rem] md:h-[30rem] overflow-hidden border-4 border-accent shadow-2xl">
+    <Image
+      src="/images/founder.png"
+      alt="Ayushe Mandal, Founder & CEO"
+      fill
+      className="object-cover"
+      sizes="(max-width: 768px) 80vw, 40vw"
+    />
+  </div>
+</div>
 
-          {/* Right Side: Details */}
+
           <div className="text-center md:text-left">
             <h2 className="text-3xl md:text-4xl font-extrabold text-light-text">
               Meet the Founder

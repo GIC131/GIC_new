@@ -56,7 +56,7 @@ const login = async (email, password) => {
       setUser(userRes.data);
       setIsAuthenticated(true);
 
-      // --- THIS IS THE LOGIC WE ARE CHANGING ---
+    
       if (userRes.data.role === 'Admin' || userRes.data.role === 'Super Admin') {
         router.push('/admin-dashboard');
       } else {

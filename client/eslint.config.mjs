@@ -34,7 +34,7 @@ const config = [
       ...reactPlugin.configs.recommended.rules,
       ...hooksPlugin.configs.recommended.rules,
 
-      // --- OUR CUSTOM RULES ---
+      
       "react/no-unescaped-entities": "off", // Fixes apostrophe errors
       "react/react-in-jsx-scope": "off",   // Fixes "'React' must be in scope"
       "react/prop-types": "off",           // Fixes "is missing in props validation"

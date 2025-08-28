@@ -24,7 +24,7 @@ const PrivateRoute = ({ children }) => {
   }
 
   if (!isAuthenticated) {
-    return null; // or a loading spinner, redirected by useEffect
+    return null; 
   }
 
   if (user.role !== 'Admin' && user.role !== 'Super Admin') {
@@ -39,7 +39,7 @@ const PrivateRoute = ({ children }) => {
     );
   }
 
-  return children; // If authenticated and has the correct role, show the page content
+  return children; 
 };
 
 export default PrivateRoute;

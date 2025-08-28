@@ -28,7 +28,7 @@ const ImageUpload = ({ onUploadSuccess }) => {
     formData.append('title', title);
 
     try {
-      // The auth token is automatically sent thanks to our AuthContext setup
+    
       await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/gallery/upload`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -38,10 +38,10 @@ const ImageUpload = ({ onUploadSuccess }) => {
       setMessage('Media uploaded successfully!');
       setFile(null);
       setTitle('');
-      e.target.reset(); // Reset the form fields
+      e.target.reset(); 
 
       if (onUploadSuccess) {
-        onUploadSuccess(); // This will trigger the media list to refresh
+        onUploadSuccess(); 
       }
     } catch (err) {
       setMessage(err.response?.data?.msg || 'Upload failed. Please try again.');

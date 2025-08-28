@@ -9,7 +9,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
           {/* Founder Section */}
           <div className="flex flex-col items-center md:items-start text-center md:text-left">
-             <Image src="/images/founder.png" alt="Founder" width={100} height={100} className="rounded-full mb-4 border-2 border-accent" />
+             <Image src="/images/founder1.png" alt="Founder" width={100} height={100} className="rounded-full mb-4 border-2 border-accent" />
              <h3 className="text-xl font-bold text-light-text">Ayushe Mandal, Founder</h3>
              <p className="text-dark-text mt-2 max-w-sm">
                Empowering professionals to achieve their career goals through expert guidance and proven strategies.
