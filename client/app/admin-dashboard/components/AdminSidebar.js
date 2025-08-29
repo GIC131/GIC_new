@@ -9,6 +9,7 @@ const AdminSidebar = () => {
         { name: 'Dashboard', href: '/admin-dashboard' },
         { name: 'Event Gallery', href: '/admin-dashboard/event-gallery' },
         { name: 'Career\'s Gallery', href: '/admin-dashboard/career-gallery' },
+        { name: 'Candidates', href: '/admin-dashboard/candidates' }, // <-- THIS IS THE NEW LINK
         { name: 'User Management', href: '/admin-dashboard/users' },
         { name: 'Questions', href: '/admin-dashboard/questions' },
     ];
