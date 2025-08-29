@@ -1,5 +1,4 @@
 // server/models/imageModel.js
-
 const mongoose = require('mongoose');
 
 const imageSchema = new mongoose.Schema({
@@ -9,11 +8,17 @@ const imageSchema = new mongoose.Schema({
   },
   title: {
     type: String,
-    default: 'Gallery Image'
+    default: 'Gallery Media'
+  },
+  // ADD THIS NEW 'category' FIELD
+  category: {
+    type: String,
+    required: true,
+    enum: ['Event', 'Career'], // Ensures the category can only be one of these two
   },
   uploadedBy: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User', 
+    ref: 'User',
     required: true,
   },
 }, {

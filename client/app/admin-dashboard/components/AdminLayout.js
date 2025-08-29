@@ -11,7 +11,8 @@ const AdminLayout = ({ children }) => {
 
     const navLinks = [
         { name: 'Dashboard', href: '/admin-dashboard' },
-        { name: 'Media Uploads', href: '/admin-dashboard/media' },
+        { name: 'Event Gallery', href: '/admin-dashboard/event-gallery' },
+        { name: 'Career\'s Gallery', href: '/admin-dashboard/career-gallery' },
         { name: 'User Management', href: '/admin-dashboard/users' },
         { name: 'Questions', href: '/admin-dashboard/questions' },
     ];
@@ -41,7 +42,7 @@ const AdminLayout = ({ children }) => {
                 {/* User Info and Logout Button */}
                 <div className="border-t border-slate-700 pt-4">
                     <p className="text-sm text-dark-text">Signed in as</p>
-                    <p className="font-semibold text-light-text">{user?.name}</p>
+                    <p className="font-semibold text-light-text truncate">{user?.name}</p>
                     <button
                         onClick={logout}
                         className="w-full mt-4 bg-red-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-red-700 transition-colors"
@@ -52,7 +53,7 @@ const AdminLayout = ({ children }) => {
             </aside>
 
             {/* Main Content */}
-            <main className="flex-grow p-8">
+            <main className="flex-grow p-8 overflow-y-auto">
                 {children}
             </main>
         </div>

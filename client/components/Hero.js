@@ -23,8 +23,8 @@ const Hero = () => {
 
    
       <div className="container mx-auto px-6 z-10 text-center">
-        <h1 className="text-4xl md:text-6xl font-extrabold text-light-text mt-4 mb-6 leading-tight animate-fade-in-down">
-          Job Placement & Career Counselling in Kolkata
+        <h1 className="text-4xl md:text-5xl font-extrabold text-light-text mt-4 mb-6 leading-tight animate-fade-in-down">
+          Unlock Your Potential, Secure Your Dream Job: Premier Career Counselling & Placement Services
         </h1>
         <p className="text-lg text-dark-text max-w-2xl mx-auto mb-8">
           Transform your future with our comprehensive career development programs. We guide students and job seekers to success with proven methodologies and expert guidance.

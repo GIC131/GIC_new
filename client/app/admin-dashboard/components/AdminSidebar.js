@@ -5,12 +5,13 @@ import { usePathname } from 'next/navigation';
 
 const AdminSidebar = () => {
     const pathname = usePathname();
-const navLinks = [
-    { name: 'Dashboard', href: '/admin-dashboard' },
-    { name: 'Media Uploads', href: '/admin-dashboard/media' },
-    { name: 'User Management', href: '/admin-dashboard/users' },
-    { name: 'Questions', href: '/admin-dashboard/questions' }, // <-- ADD THIS
-];
+    const navLinks = [
+        { name: 'Dashboard', href: '/admin-dashboard' },
+        { name: 'Event Gallery', href: '/admin-dashboard/event-gallery' },
+        { name: 'Career\'s Gallery', href: '/admin-dashboard/career-gallery' },
+        { name: 'User Management', href: '/admin-dashboard/users' },
+        { name: 'Questions', href: '/admin-dashboard/questions' },
+    ];
 
     return (
         <aside className="w-64 bg-secondary p-6">

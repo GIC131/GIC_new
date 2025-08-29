@@ -43,7 +43,7 @@ export const AuthProvider = ({ children }) => {
     loadUser();
   }, []);
 
-const login = async (email, password) => {
+  const login = async (email, password) => {
     const body = JSON.stringify({ email, password });
     const config = { headers: { 'Content-Type': 'application/json' } };
 
@@ -51,20 +51,21 @@ const login = async (email, password) => {
       const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`, body, config);
       localStorage.setItem('token', res.data.token);
       setAuthToken(res.data.token);
-      
+
       const userRes = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/auth`);
       setUser(userRes.data);
       setIsAuthenticated(true);
 
-    
       if (userRes.data.role === 'Admin' || userRes.data.role === 'Super Admin') {
         router.push('/admin-dashboard');
       } else {
         router.push('/dashboard');
       }
     } catch (err) {
-      console.error(err.response.data);
-      throw new Error(err.response.data.msg || 'Login failed');
+      // THIS IS THE CORRECTED PART
+      const errorMessage = err.response?.data?.msg || 'Login failed. Is the server running?';
+      console.error(err);
+      throw new Error(errorMessage);
     }
   };
 

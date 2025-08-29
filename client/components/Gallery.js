@@ -5,72 +5,68 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Image from 'next/image';
 
-const Gallery = () => {
+const Gallery = ({ category, title, description }) => {
   const [media, setMedia] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchMedia = async () => {
+      if (!category) return;
+      setLoading(true);
       try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/gallery`);
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/gallery?category=${category}`);
         setMedia(response.data);
       } catch (err) {
-        setError('Failed to load media. The gallery is currently empty or the server is unavailable.');
-        console.error(err);
+        setError(`Failed to load ${category} gallery.`);
+        console.error(`Failed to load ${category} gallery`, err);
       } finally {
         setLoading(false);
       }
     };
     fetchMedia();
-  }, []);
+  }, [category]);
 
-  const backendUrl = 'http://localhost:5000';
-
-  const isVideo = (url) => {
-    return /\.(mp4|mov|avi)$/.test(url);
-  };
+  const backendUrl = process.env.NEXT_PUBLIC_API_URL;
+  const isVideo = (url) => /\.(mp4|mov|avi)$/.test(url);
 
   return (
-    <section id="gallery" className="bg-secondary py-20 sm:py-24">
+    <section id={category.toLowerCase()} className="bg-primary py-20 sm:py-24">
       <div className="container mx-auto px-6">
         <div className="text-center max-w-3xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-extrabold text-light-text">
-            Our Success Stories in Pictures & Video
-          </h2>
-          <p className="mt-4 text-lg text-dark-text">
-            A glimpse into our workshops, events, and the vibrant community we've built.
-          </p>
+          <h2 className="text-3xl md:text-4xl font-extrabold text-light-text">{title}</h2>
+          <p className="mt-4 text-lg text-dark-text">{description}</p>
         </div>
 
         <div className="mt-16">
           {loading && <p className="text-center text-accent">Loading Gallery...</p>}
           {error && <p className="text-center text-red-400">{error}</p>}
-
-          {!loading && !error && media.length === 0 && (
-            <p className="text-center text-dark-text">The gallery is currently empty. Check back soon!</p>
+          {!loading && media.length === 0 && (
+            <p className="text-center text-dark-text">The gallery is currently empty.</p>
           )}
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {media.map((item) => (
-              <div key={item._id} className="relative aspect-square rounded-lg overflow-hidden group bg-primary">
+              // The 'group' class on this parent div enables the hover effect on its children
+              <div key={item._id} className="relative aspect-square rounded-lg overflow-hidden group bg-secondary">
                 {isVideo(item.imageUrl) ? (
                   <video controls className="w-full h-full object-cover">
                     <source src={`${backendUrl}${item.imageUrl}`} type={`video/${item.imageUrl.split('.').pop()}`} />
-                    Your browser does not support the video tag.
                   </video>
                 ) : (
                   <Image
                     src={`${backendUrl}${item.imageUrl}`}
                     alt={item.title || 'Gallery Media'}
                     fill
+                    // The 'group-hover:scale-110' class makes the image zoom on hover
                     className="object-cover group-hover:scale-110 transition-transform duration-300"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    loading="lazy" 
+                    sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+                    loading="lazy"
                   />
                 )}
-                 <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                    <p className="text-white text-center p-2">{item.title}</p>
+                 {/* This overlay is hidden by default ('opacity-0') and appears on hover ('group-hover:opacity-100') */}
+                 <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center p-4">
+                    <p className="text-white text-center font-semibold">{item.title}</p>
                 </div>
               </div>
             ))}
