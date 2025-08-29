@@ -25,7 +25,9 @@ app.use(express.json());
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/gallery', require('./routes/galleryRoutes'));
 app.use('/api/users', require('./routes/userRoutes'));
-app.use('/api/questions', require('./routes/questionRoutes')); // Correctly grouped with other routes
+app.use('/api/questions', require('./routes/questionRoutes')); 
+app.use('/api/candidates', require('./routes/candidateRoutes'));
+app.use('/uploads/documents', express.static(path.join(__dirname, '/uploads/documents')));
 
 
 app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
