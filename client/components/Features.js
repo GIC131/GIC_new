@@ -30,7 +30,7 @@ const Features = () => {
               We partner with schools and colleges to provide scalable, effective career development solutions that prepare students for the competitive job market.
             </p>
             <div className="bg-secondary p-8 rounded-lg inline-block">
-              <p className="text-5xl md:text-6xl font-bold text-accent">50,000+</p>
+              <p className="text-5xl md:text-6xl font-bold text-accent">5000+</p>
               <p className="text-xl text-light-text mt-2">Students Successfully Guided</p>
             </div>
           </div>
