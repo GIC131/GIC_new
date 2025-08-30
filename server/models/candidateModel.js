@@ -1,6 +1,6 @@
 // server/models/candidateModel.js
 const mongoose = require('mongoose');
-const { v4: uuidv4 } = require('uuid'); // To generate unique keys
+const { v4: uuidv4 } = require('uuid');
 
 const documentSchema = new mongoose.Schema({
     fileName: { type: String, required: true },
@@ -9,25 +9,16 @@ const documentSchema = new mongoose.Schema({
 });
 
 const candidateSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true,
-    },
-    email: {
-        type: String,
-        required: true,
-        unique: true,
-    },
-    role: { // e.g., "Intern", "Full-Time Hire"
-        type: String,
-        required: true,
-    },
-    secure_key: { // Unique key for the QR code URL
-        type: String,
-        default: uuidv4,
-        unique: true,
-    },
-    documents: [documentSchema]
+    name: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    role: { type: String, required: true },
+    secure_key: { type: String, default: uuidv4, unique: true },
+    documents: [documentSchema],
+    // ADD THIS NEW FIELD
+    isDeleted: {
+        type: Boolean,
+        default: false
+    }
 }, { timestamps: true });
 
 const Candidate = mongoose.model('Candidate', candidateSchema);

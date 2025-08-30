@@ -6,22 +6,23 @@ const path = require('path');
 const { getAllCandidates, getCandidateByKey, addCandidate, uploadDocument, deleteCandidate } = require('../controllers/candidateController');
 const { protect, adminProtect } = require('../middleware/authMiddleware');
 
-// Multer setup for documents
 const storage = multer.diskStorage({
     destination: './uploads/documents/',
     filename: (req, file, cb) => {
         cb(null, `${Date.now()}-${file.originalname}`);
     }
 });
-const upload = multer({ storage }).single('document');
+const upload = multer({ storage }).array('documents', 5);
 
-// Admin Routes
-router.route('/').get(protect, adminProtect, getAllCandidates);
+// --- Admin-Only Routes ---
 router.route('/').post(protect, adminProtect, addCandidate);
 router.route('/:id').delete(protect, adminProtect, deleteCandidate);
 router.route('/:id/upload').post(protect, adminProtect, upload, uploadDocument);
 
-// Public Route for QR Code
+// --- Public Routes ---
 router.get('/view/:key', getCandidateByKey);
+// UPDATED: This route is now public so the verification page can display the QR codes
+router.route('/').get(getAllCandidates);
+
 
 module.exports = router;

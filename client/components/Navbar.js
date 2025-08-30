@@ -12,13 +12,15 @@ const Navbar = () => {
   const { isAuthenticated, user, logout } = useAuth();
   const dropdownRef = useRef(null);
 
+  // CORRECTED: Removed the duplicate "Contact" link
   const navLinks = [
     { text: "Services", link: "/#services" },
     { text: "Event Gallery", link: "/event-gallery" },
     { text: "Career's Gallery", link: "/career-gallery" },
     { text: "Resume Building", link: "/resume-building" },
     { text: "Interview Questions", link: "/interview-questions" },
-    { text: "Contact", link: "/contact" },
+    { text: "Verify Certificate", link: "/verify-certificate" },
+    // The "Contact" link is now part of the main page, not duplicated here
   ];
 
   // Close dropdown if clicked outside
@@ -43,30 +45,33 @@ const Navbar = () => {
     <header className="bg-secondary/80 backdrop-blur-sm sticky top-0 z-50">
       <nav className="container mx-auto px-6 py-4 flex justify-between items-center">
         <Link href="/" className="flex items-center space-x-2 flex-shrink-0">
-          <Image src="/images/logo.jpg" alt="GIC Logo" width={40} height={40} className="rounded-full" />
+          <Image 
+    src="/images/logo.jpg" 
+    alt="GIC Logo" 
+    width={40} 
+    height={40} 
+    className="rounded-full object-contain" // <-- ADD/UPDATE THIS LINE
+/>
           <span className="text-xl font-bold text-light-text hidden sm:inline">GetInterviewConfidence</span>
         </Link>
 
         {/* Desktop Menu */}
-        <div className="hidden lg:flex items-center space-x-6">
+        <div className="hidden lg:flex items-center space-x-4">
           {navLinks.map((item) => (
-            <Link key={item.text} href={item.link} className="text-dark-text hover:text-accent transition-colors duration-300 whitespace-nowrap">
+            <Link key={item.text} href={item.link} className="text-dark-text hover:text-accent transition-colors duration-300 whitespace-nowrap px-2">
               {item.text}
             </Link>
           ))}
-          <div className="pl-4">
+          {/* CORRECTED: Wrapped auth links in a div to prevent shrinking */}
+          <div className="pl-2 flex-shrink-0">
             {isAuthenticated ? (
               <div className="relative" ref={dropdownRef}>
-                {/* Dropdown Trigger */}
                 <button onClick={() => setIsDropdownOpen(!isDropdownOpen)} className="flex items-center space-x-2 cursor-pointer">
                   <span className="text-dark-text">Welcome, {user?.name}</span>
                   <svg className={`w-4 h-4 text-dark-text transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
                 </button>
-
-                {/* Dropdown Menu */}
                 {isDropdownOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-secondary rounded-md shadow-lg py-2 border border-slate-700">
-                    {/* --- THIS IS THE CORRECTED LOGIC --- */}
                     {(user?.role === 'Admin' || user?.role === 'Super Admin') ? (
                       <Link href="/admin-dashboard" onClick={() => setIsDropdownOpen(false)} className="block px-4 py-2 text-sm text-dark-text hover:bg-slate-700 hover:text-accent">
                         Admin Dashboard
@@ -106,7 +111,6 @@ const Navbar = () => {
              {isAuthenticated ? (
                 <>
                   <span className="text-dark-text">Welcome, {user?.name}</span>
-                  {/* --- THIS IS THE CORRECTED LOGIC FOR MOBILE --- */}
                   {(user?.role === 'Admin' || user?.role === 'Super Admin') ? (
                     <Link href="/admin-dashboard" className="text-dark-text hover:text-accent" onClick={() => setIsMobileMenuOpen(false)}>
                       Admin Dashboard

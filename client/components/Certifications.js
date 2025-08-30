@@ -29,6 +29,7 @@ const Certifications = () => {
                                     alt={cert.name}
                                     fill
                                     className="object-contain"
+                                    sizes="150px"
                                 />
                             </div>
                         </div>

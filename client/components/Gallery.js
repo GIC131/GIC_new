@@ -54,15 +54,14 @@ const Gallery = ({ category, title, description }) => {
                     <source src={`${backendUrl}${item.imageUrl}`} type={`video/${item.imageUrl.split('.').pop()}`} />
                   </video>
                 ) : (
-                  <Image
-                    src={`${backendUrl}${item.imageUrl}`}
-                    alt={item.title || 'Gallery Media'}
-                    fill
-                    // The 'group-hover:scale-110' class makes the image zoom on hover
-                    className="object-cover group-hover:scale-110 transition-transform duration-300"
-                    sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
-                    loading="lazy"
-                  />
+<Image
+    src={`${backendUrl}${item.imageUrl}`}
+    alt={item.title || 'Gallery Media'}
+    fill
+    className="object-cover group-hover:scale-110 transition-transform duration-300"
+    sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw" // <-- ADD THIS LINE
+    loading="lazy"
+/>
                 )}
                  {/* This overlay is hidden by default ('opacity-0') and appears on hover ('group-hover:opacity-100') */}
                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center p-4">

@@ -1,26 +1,25 @@
 // server/controllers/candidateController.js
 const Candidate = require('../models/candidateModel');
-const path = require('path');
 
-// Get all candidates (for admin)
+// UPDATED: Now only gets candidates that are NOT deleted
 exports.getAllCandidates = async (req, res) => {
     try {
-        const candidates = await Candidate.find({}).sort({ createdAt: -1 });
+        const candidates = await Candidate.find({ isDeleted: false }).sort({ createdAt: -1 });
         res.json(candidates);
     } catch (err) { res.status(500).send('Server Error'); }
 };
 
-// Get a single candidate's data via secure key (for the public QR page)
 exports.getCandidateByKey = async (req, res) => {
     try {
-        const candidate = await Candidate.findOne({ secure_key: req.params.key });
-        if (!candidate) return res.status(404).json({ msg: 'Candidate not found' });
+        // Also ensure the public can't see deleted records
+        const candidate = await Candidate.findOne({ secure_key: req.params.key, isDeleted: false });
+        if (!candidate) return res.status(404).json({ msg: 'Certificate not found or has been revoked' });
         res.json(candidate);
     } catch (err) { res.status(500).send('Server Error'); }
 };
 
-// Add a new candidate (admin)
 exports.addCandidate = async (req, res) => {
+    // This function remains the same
     const { name, email, role } = req.body;
     try {
         const newCandidate = new Candidate({ name, email, role });
@@ -29,30 +28,45 @@ exports.addCandidate = async (req, res) => {
     } catch (err) { res.status(400).json({ msg: 'Error creating candidate. Email may already exist.' }); }
 };
 
-// Upload a document for a candidate (admin)
 exports.uploadDocument = async (req, res) => {
+    // This function remains the same
     try {
         const candidate = await Candidate.findById(req.params.id);
         if (!candidate) return res.status(404).json({ msg: 'Candidate not found' });
 
-        if (!req.file) return res.status(400).json({ msg: 'Please upload a file' });
+        if (!req.files || req.files.length === 0) {
+            return res.status(400).json({ msg: 'Please upload at least one file' });
+        }
 
-        const newDocument = {
-            fileName: req.file.originalname,
-            filePath: `/uploads/documents/${req.file.filename}`
-        };
+        const tags = req.body.tags ? req.body.tags.split(',') : [];
 
-        candidate.documents.push(newDocument);
+        req.files.forEach((file, index) => {
+            candidate.documents.push({
+                fileName: tags[index] || file.originalname,
+                filePath: `/uploads/documents/${file.filename}`
+            });
+        });
+
         await candidate.save();
         res.json(candidate);
-    } catch (err) { res.status(500).send('Server Error'); }
+    } catch (err) { 
+        console.error(err.message);
+        res.status(500).send('Server Error'); 
+    }
 };
 
-// Delete a candidate (admin)
+// UPDATED: Now performs a "soft delete" instead of a permanent one
 exports.deleteCandidate = async (req, res) => {
-    // (Similar logic to deleteMedia can be implemented here for file cleanup)
     try {
-         await Candidate.findByIdAndDelete(req.params.id);
-         res.json({ msg: 'Candidate deleted' });
-    } catch(err) { res.status(500).send('Server Error'); }
+        const candidate = await Candidate.findByIdAndUpdate(
+            req.params.id, 
+            { isDeleted: true }, 
+            { new: true }
+        );
+        if (!candidate) return res.status(404).json({ msg: 'Candidate not found' });
+        res.json({ msg: 'Candidate deleted successfully' });
+    } catch(err) { 
+        console.error(err.message);
+        res.status(500).send('Server Error'); 
+    }
 };
