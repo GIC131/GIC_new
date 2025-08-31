@@ -41,7 +41,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (email, password) => {
-    const body = JSON.stringify({ email, password });
+    const body = { email, password };
     const config = { headers: { 'Content-Type': 'application/json' } };
     try {
       const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`, body, config);
