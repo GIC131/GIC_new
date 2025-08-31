@@ -1,10 +1,11 @@
 // client/app/interview-questions/page.js
 
+export const dynamic = 'force-dynamic'; // <-- ADD THIS LINE
+
+// This function now runs on the server during the request.
 async function getDynamicQuestions() {
   try {
-    // Use the server-side environment variable. This is more reliable.
     const apiUrl = process.env.API_URL || 'http://localhost:5000';
-
     const res = await fetch(`${apiUrl}/api/questions`, { cache: 'no-store' });
 
     if (!res.ok) {
@@ -46,7 +47,6 @@ const InterviewQuestionsPage = async () => {
             Prepare to ace your next interview. Here are some of the most common questions, along with expert tips on how to answer them.
           </p>
         </div>
-
         <div className="max-w-3xl mx-auto bg-secondary p-8 rounded-lg border border-slate-700">
           <h2 className="text-2xl font-bold text-accent mb-6">Questions to Practice</h2>
           <ul className="space-y-6">
