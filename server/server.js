@@ -15,7 +15,7 @@ const port = process.env.PORT || 5000;
 
 
 const corsOptions = {
-  origin: 'https://getinteviewconfidence.com', 
+  origin: 'http://localhost:3000', 
   optionsSuccessStatus: 200 
 };
 app.use(cors(corsOptions));
