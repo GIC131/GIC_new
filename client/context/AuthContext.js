@@ -1,12 +1,10 @@
 // client/context/AuthContext.js
 'use client';
-
 import { createContext, useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 
 const AuthContext = createContext();
-
 export const useAuth = () => useContext(AuthContext);
 
 const setAuthToken = (token) => {
@@ -34,8 +32,7 @@ export const AuthProvider = ({ children }) => {
           setIsAuthenticated(true);
         } catch (err) {
           localStorage.removeItem('token');
-          setIsAuthenticated(false);
-          setUser(null);
+          setAuthToken(null);
         }
       }
       setLoading(false);
@@ -46,25 +43,21 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     const body = JSON.stringify({ email, password });
     const config = { headers: { 'Content-Type': 'application/json' } };
-
     try {
       const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`, body, config);
       localStorage.setItem('token', res.data.token);
       setAuthToken(res.data.token);
-
       const userRes = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/auth`);
       setUser(userRes.data);
       setIsAuthenticated(true);
-
-      if (userRes.data.role === 'Admin' || userRes.data.role === 'Super Admin') {
+      if (userRes.data?.role === 'Admin' || userRes.data?.role === 'Super Admin') {
         router.push('/admin-dashboard');
       } else {
         router.push('/dashboard');
       }
     } catch (err) {
-      // THIS IS THE CORRECTED PART
-      const errorMessage = err.response?.data?.msg || 'Login failed. Is the server running?';
-      console.error(err);
+      const errorMessage = err.response?.data?.msg || 'Login failed. Please check your credentials or server status.';
+      console.error("Login error:", err);
       throw new Error(errorMessage);
     }
   };
@@ -77,17 +70,9 @@ export const AuthProvider = ({ children }) => {
     router.push('/login');
   };
 
-  const authContextValue = {
-    user,
-    isAuthenticated,
-    loading,
-    login,
-    logout,
-  };
-
   return (
-    <AuthContext.Provider value={authContextValue}>
-      {loading ? null : children}
+    <AuthContext.Provider value={{ user, isAuthenticated, loading, login, logout }}>
+      {children}
     </AuthContext.Provider>
   );
 };

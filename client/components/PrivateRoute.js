@@ -1,6 +1,5 @@
 // client/components/PrivateRoute.js
 'use client';
-
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
@@ -15,7 +14,7 @@ const PrivateRoute = ({ children }) => {
     }
   }, [isAuthenticated, loading, router]);
 
-  if (loading) {
+  if (loading || !isAuthenticated) {
     return (
       <div className="flex justify-center items-center min-h-screen">
         <p className="text-accent text-xl">Loading...</p>
@@ -23,11 +22,7 @@ const PrivateRoute = ({ children }) => {
     );
   }
 
-  if (!isAuthenticated) {
-    return null; 
-  }
-
-  if (user.role !== 'Admin' && user.role !== 'Super Admin') {
+  if (user?.role !== 'Admin' && user?.role !== 'Super Admin') {
      return (
       <div className="flex flex-col justify-center items-center min-h-screen text-center">
         <h1 className="text-4xl font-bold text-red-500">Access Denied</h1>
@@ -38,8 +33,6 @@ const PrivateRoute = ({ children }) => {
       </div>
     );
   }
-
-  return children; 
+  return children;
 };
-
 export default PrivateRoute;
