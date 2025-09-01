@@ -5,9 +5,9 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'http',
-        hostname: 'localhost',
-        port: '5000',
+        protocol: 'https',
+        hostname: 'www.getinteviewconfidence.com',
+        port: '',
         pathname: '/uploads/**',
       },
     ],
