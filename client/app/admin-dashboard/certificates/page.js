@@ -7,6 +7,8 @@ import { QRCodeCanvas as QRCode } from 'qrcode.react';
 const CandidateCard = ({ candidate, onUpdate }) => {
     const [files, setFiles] = useState([]);
     const [tags, setTags] = useState([]);
+    
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://getinteviewconfidence.com';
 
     const handleFileChange = (e) => {
         const selectedFiles = Array.from(e.target.files);
@@ -27,7 +29,7 @@ const CandidateCard = ({ candidate, onUpdate }) => {
         files.forEach(file => formData.append('documents', file));
         formData.append('tags', tags.join(','));
         try {
-            await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/candidates/${candidate._id}/upload`, formData);
+            await axios.post(`${API_URL}/api/candidates/${candidate._id}/upload`, formData);
             alert('Documents uploaded successfully!');
             e.target.reset();
             onUpdate();
@@ -39,7 +41,7 @@ const CandidateCard = ({ candidate, onUpdate }) => {
     const handleDelete = async () => {
         if (confirm(`Are you sure you want to delete ${candidate.name}?`)) {
             try {
-                await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/api/candidates/${candidate._id}`);
+                await axios.delete(`${API_URL}/api/candidates/${candidate._id}`);
                 onUpdate();
             } catch (error) {
                 alert('Failed to delete candidate.');
@@ -79,9 +81,14 @@ const CertificateManagerPage = () => {
     const [formData, setFormData] = useState({ name: '', email: '', role: '' });
     const [newFiles, setNewFiles] = useState([]);
     const [newFileTags, setNewFileTags] = useState([]);
+    
+    // Debug: Log the API URL
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://getinteviewconfidence.com';
+    console.log('API URL:', API_URL);
+    
     const fetchCandidates = async () => {
         try {
-            const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/candidates`);
+            const res = await axios.get(`${API_URL}/api/candidates`);
             setCandidates(res.data);
         } catch (error) {
             console.error('Failed to fetch candidates');
@@ -91,27 +98,43 @@ const CertificateManagerPage = () => {
     const handleFormChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
     const handleAddCandidate = async (e) => {
         e.preventDefault();
+        e.stopPropagation();
+        
+        console.log('Form submitted, preventing default behavior');
+        
         try {
-            const createRes = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/candidates`, formData);
+            console.log('Creating candidate with data:', formData);
+            const createRes = await axios.post(`${API_URL}/api/candidates`, formData);
+            console.log('Candidate created:', createRes.data);
 
             // If files selected, immediately upload them with taglines
             if (newFiles.length > 0 && createRes?.data?._id) {
+                console.log('Uploading files:', newFiles.length);
                 const uploadForm = new FormData();
                 newFiles.forEach((file) => uploadForm.append('documents', file));
                 uploadForm.append('tags', newFileTags.join(','));
-                await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/candidates/${createRes.data._id}/upload`, uploadForm);
+                await axios.post(`${API_URL}/api/candidates/${createRes.data._id}/upload`, uploadForm);
+                console.log('Files uploaded successfully');
             }
 
             setFormData({ name: '', email: '', role: '' });
             setNewFiles([]);
             setNewFileTags([]);
+            
+            // Reset the form
+            const form = e.target;
+            form.reset();
+            
             // Optimistic UI: prepend the new candidate so QR shows immediately
             if (createRes?.data) {
                 setCandidates((prev) => [{ ...createRes.data, documents: [] }, ...prev]);
             }
             // Background refresh
             fetchCandidates();
+            
+            alert('Candidate added successfully!');
         } catch (error) {
+            console.error('Error adding candidate:', error);
             alert('Failed to add candidate. The email may already be in use.');
         }
     };
@@ -133,21 +156,64 @@ const CertificateManagerPage = () => {
             <h1 className="text-3xl font-bold mb-6 text-light-text">Candidate Certificate Manager</h1>
             <div className="bg-secondary p-6 rounded-lg mb-8">
                 <h2 className="text-xl font-bold text-accent mb-4">Add New Candidate</h2>
-                <form onSubmit={handleAddCandidate} className="grid md:grid-cols-4 gap-4 items-start">
-                    <input name="name" value={formData.name} onChange={handleFormChange} placeholder="Candidate Name" required className="bg-primary p-2 rounded-md border border-slate-600"/>
-                    <input name="email" type="email" value={formData.email} onChange={handleFormChange} placeholder="Candidate Email" required className="bg-primary p-2 rounded-md border border-slate-600"/>
-                    <input name="role" value={formData.role} onChange={handleFormChange} placeholder="Role (e.g., Intern)" required className="bg-primary p-2 rounded-md border border-slate-600"/>
+                <form onSubmit={handleAddCandidate} className="grid md:grid-cols-4 gap-4 items-start" noValidate>
+                    <input 
+                        name="name" 
+                        value={formData.name} 
+                        onChange={handleFormChange} 
+                        placeholder="Candidate Name" 
+                        required 
+                        className="bg-primary p-2 rounded-md border border-slate-600 text-light-text"
+                    />
+                    <input 
+                        name="email" 
+                        type="email" 
+                        value={formData.email} 
+                        onChange={handleFormChange} 
+                        placeholder="Candidate Email" 
+                        required 
+                        className="bg-primary p-2 rounded-md border border-slate-600 text-light-text"
+                    />
+                    <input 
+                        name="role" 
+                        value={formData.role} 
+                        onChange={handleFormChange} 
+                        placeholder="Role (e.g., Intern)" 
+                        required 
+                        className="bg-primary p-2 rounded-md border border-slate-600 text-light-text"
+                    />
                     <div className="md:col-span-4 space-y-2">
                         <label className="block text-sm text-dark-text">Upload Documents (optional)</label>
-                        <input type="file" multiple onChange={handleNewFilesChange} className="text-sm text-dark-text file:mr-2 file:py-1 file:px-2 file:rounded-full file:border-0" />
+                        <input 
+                            type="file" 
+                            multiple 
+                            onChange={handleNewFilesChange} 
+                            className="text-sm text-dark-text file:mr-2 file:py-1 file:px-2 file:rounded-full file:border-0" 
+                        />
                         {newFiles.length > 0 && (
                             <div className="grid md:grid-cols-2 gap-2">
                                 {newFiles.map((file, idx) => (
-                                    <input key={idx} type="text" placeholder={`Tagline for ${file.name}`} value={newFileTags[idx]} onChange={(e) => handleNewTagChange(idx, e.target.value)} required className="bg-primary p-2 rounded-md border border-slate-600" />
+                                    <input 
+                                        key={idx} 
+                                        type="text" 
+                                        placeholder={`Tagline for ${file.name}`} 
+                                        value={newFileTags[idx]} 
+                                        onChange={(e) => handleNewTagChange(idx, e.target.value)} 
+                                        required 
+                                        className="bg-primary p-2 rounded-md border border-slate-600 text-light-text" 
+                                    />
                                 ))}
                             </div>
                         )}
-                        <button type="submit" className="bg-accent text-primary font-bold rounded-md py-2 px-4">Add Candidate{newFiles.length > 0 ? ' & Upload Docs' : ''}</button>
+                        <button 
+                            type="submit" 
+                            className="bg-accent text-primary font-bold rounded-md py-2 px-4 hover:bg-accent/90 transition-colors"
+                            onClick={(e) => {
+                                console.log('Button clicked, form should submit via onSubmit handler');
+                            }}
+                        >
+                            Add Candidate{newFiles.length > 0 ? ' & Upload Docs' : ''}
+                        </button>
                     </div>
                 </form>
             </div>
