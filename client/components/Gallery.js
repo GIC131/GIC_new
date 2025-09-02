@@ -2,7 +2,6 @@
 'use client';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import Image from 'next/image';
 
 const Gallery = ({ category, title, description }) => {
   const [media, setMedia] = useState([]);
@@ -46,8 +45,8 @@ const Gallery = ({ category, title, description }) => {
                     <source src={`${process.env.NEXT_PUBLIC_API_URL}${item.imageUrl}`} type={`video/${item.imageUrl.split('.').pop()}`} />
                   </video>
                 ) : (
-                  // --- THIS IS THE CORRECTED LINE ---
-                  <Image src={item.imageUrl} alt={item.title} fill className="object-cover" sizes="(max-width: 768px) 50vw, 33vw, 25vw" />
+                  // --- THIS IS THE CHANGED PART ---
+                  <img src={`${process.env.NEXT_PUBLIC_API_URL}${item.imageUrl}`} alt={item.title || 'Gallery Image'} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" loading="lazy" />
                 )}
               </div>
             ))}

@@ -3,13 +3,14 @@
 import ImageUpload from "@/components/ImageUpload";
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import Image from 'next/image';
+// NOTE: We no longer import the Next.js Image component
 import { useAuth } from '@/context/AuthContext';
 
 const MediaManager = ({ category }) => {
     const { isAuthenticated } = useAuth();
     const [media, setMedia] = useState([]);
     const [loading, setLoading] = useState(true);
+    const backendUrl = process.env.NEXT_PUBLIC_API_URL;
 
     const fetchMedia = async () => { /* ... */ };
     useEffect(() => { if (isAuthenticated) fetchMedia() }, [isAuthenticated, category]);
@@ -26,10 +27,10 @@ const MediaManager = ({ category }) => {
                     <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
                         {media.map(item => (
                             <div key={item._id} className="relative aspect-square rounded-lg group bg-primary">
-                                {isVideo(item.imageUrl) ? (<video className="w-full h-full object-cover" controls><source src={`${process.env.NEXT_PUBLIC_API_URL}${item.imageUrl}`} /></video>) 
+                                {isVideo(item.imageUrl) ? (<video className="w-full h-full object-cover" controls><source src={`${backendUrl}${item.imageUrl}`} /></video>) 
                                 : (
-                                    // --- THIS IS THE CORRECTED LINE ---
-                                    <Image src={item.imageUrl} alt={item.title} fill className="object-cover" sizes="20vw" />
+                                    // --- THIS IS THE CHANGED PART ---
+                                    <img src={`${backendUrl}${item.imageUrl}`} alt={item.title || 'Gallery Media'} className="w-full h-full object-cover" loading="lazy" />
                                 )}
                                 <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center p-2">
                                     <p className="text-white text-xs text-center mb-2 truncate">{item.title}</p>
