@@ -52,7 +52,7 @@ const deleteMedia = async (req, res) => {
     if (!media) {
       return res.status(404).json({ msg: 'Media not found' });
     }
-    const filePath = path.join(__dirname, '..', media.imageUrl);
+    const filePath = path.join(__dirname, '..', media.imageUrl.startsWith('/') ? media.imageUrl.substring(1) : media.imageUrl);
     fs.unlink(filePath, (err) => {
       if (err) {
         console.error('Failed to delete file from server:', err);

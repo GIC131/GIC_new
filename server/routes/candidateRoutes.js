@@ -7,7 +7,7 @@ const { getAllCandidates, getCandidateByKey, addCandidate, uploadDocument, delet
 const { protect, adminProtect } = require('../middleware/authMiddleware');
 
 const storage = multer.diskStorage({
-    destination: './uploads/documents/',
+    destination: path.join(__dirname, '..', 'uploads', 'documents'),
     filename: (req, file, cb) => {
         cb(null, `${Date.now()}-${file.originalname}`);
     }

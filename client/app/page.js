@@ -19,6 +19,16 @@ export default function Home() {
       <FounderSection />
       <Services />
       <Testimonials />
+      <Gallery
+        category="Event"
+        title="Event Gallery"
+        description="Highlights and moments from our events."
+      />
+      <Gallery
+        category="Career"
+        title="Career Gallery"
+        description="Snapshots from our career programs and achievements."
+      />
       <ContactSection />
     </div>
   );

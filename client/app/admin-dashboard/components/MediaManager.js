@@ -68,7 +68,7 @@ const MediaManager = ({ category }) => {
                                         {isVideo(item.imageUrl) ? (
                                             <video className="w-full h-full object-cover" controls><source src={`${backendUrl}${item.imageUrl}`} /></video>
                                         ) : (
-                                            <Image src={item.imageUrl} alt={item.title || 'Gallery Media'} fill className="object-cover" sizes="20vw" />
+                                            <img src={`${backendUrl}${item.imageUrl}`} alt={item.title || 'Gallery Media'} className="w-full h-full object-cover" />
                                         )}
                                         <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center p-2">
                                             <p className="text-white text-xs text-center mb-2 truncate">{item.title || 'Untitled'}</p>

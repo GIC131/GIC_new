@@ -8,7 +8,7 @@ const { getImages, uploadImage, deleteMedia } = require('../controllers/galleryC
 const { protect, adminProtect } = require('../middleware/authMiddleware');
 
 const storage = multer.diskStorage({
-  destination: './uploads/',
+  destination: path.join(__dirname, '..', 'uploads'),
   filename: function (req, file, cb) {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   },
