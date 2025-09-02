@@ -26,7 +26,7 @@ const ContactSection = () => {
     setStatus('Sending...');
     try {
       // ** PASTE YOUR FORMSPREE URL HERE **
-      await axios.post('https://formspree.io/f/your_unique_id', formData);
+      await axios.post('https://formspree.io/f/xgvlwbbg', formData);
       setStatus('Message sent successfully!');
       setFormData({ name: '', email: '', subject: '', message: '' });
     } catch (error) {
@@ -46,6 +46,7 @@ const ContactSection = () => {
           <p className="mt-4 text-lg text-dark-text">Whether you have questions or want to partner with us, our team is here to help you succeed.</p>
         </div>
         <div className="mt-16 grid md:grid-cols-2 gap-12 items-start">
+          {/* Left Side: Contact Details */}
           <div className="space-y-8">
             <h3 className="text-2xl font-bold text-light-text">Get in Touch</h3>
             <div className="space-y-6">
@@ -58,10 +59,33 @@ const ContactSection = () => {
               <a href={linkedinLink} target="_blank" rel="noopener noreferrer" className="text-dark-text hover:text-accent"><svg className="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg></a>
             </div>
           </div>
-          {/* Right Side: Form */}
+
+          {/* Right Side: Form -- THIS IS NOW RESTORED */}
           <div className="bg-secondary p-8 rounded-lg border border-slate-700">
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* ... form inputs ... */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div>
+                  <label htmlFor="name" className="block text-sm font-medium text-dark-text">Your Name</label>
+                  <input type="text" id="name" value={formData.name} onChange={handleChange} required placeholder="John Doe" className="mt-1 w-full bg-primary border border-slate-600 rounded-md py-2 px-3 text-light-text" />
+                </div>
+                 <div>
+                  <label htmlFor="email" className="block text-sm font-medium text-dark-text">Your Email</label>
+                  <input type="email" id="email" value={formData.email} onChange={handleChange} required placeholder="example@email.com" className="mt-1 w-full bg-primary border border-slate-600 rounded-md py-2 px-3 text-light-text" />
+                </div>
+              </div>
+              <div>
+                <label htmlFor="subject" className="block text-sm font-medium text-dark-text">Subject</label>
+                <input type="text" id="subject" value={formData.subject} onChange={handleChange} required placeholder="Interview Preparation Inquiry" className="mt-1 w-full bg-primary border border-slate-600 rounded-md py-2 px-3 text-light-text" />
+              </div>
+              <div>
+                <label htmlFor="message" className="block text-sm font-medium text-dark-text">Message</label>
+                <textarea id="message" rows="5" value={formData.message} onChange={handleChange} required placeholder="Tell us how we can help you..." className="mt-1 w-full bg-primary border border-slate-600 rounded-md py-2 px-3 text-light-text"></textarea>
+              </div>
+              <div>
+                <button type="submit" className="w-full bg-accent text-primary font-bold py-3 px-4 rounded-lg hover:bg-sky-400 flex items-center justify-center space-x-2">
+                  <span>{status ? status : 'Send Message'}</span>
+                </button>
+              </div>
             </form>
           </div>
         </div>
