@@ -45,8 +45,12 @@ const Gallery = ({ category, title, description }) => {
                     <source src={`${process.env.NEXT_PUBLIC_API_URL}${item.imageUrl}`} type={`video/${item.imageUrl.split('.').pop()}`} />
                   </video>
                 ) : (
-                  // --- THIS IS THE CHANGED PART ---
                   <img src={`${process.env.NEXT_PUBLIC_API_URL}${item.imageUrl}`} alt={item.title || 'Gallery Image'} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" loading="lazy" />
+                )}
+                {item.title && (
+                  <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white text-sm px-2 py-1 truncate">
+                    {item.title}
+                  </div>
                 )}
               </div>
             ))}

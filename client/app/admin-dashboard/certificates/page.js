@@ -77,10 +77,26 @@ const CandidateCard = ({ candidate, onUpdate }) => {
 const CertificateManagerPage = () => {
     const [candidates, setCandidates] = useState([]);
     const [formData, setFormData] = useState({ name: '', email: '', role: '' });
-    const fetchCandidates = async () => { /* ... */ };
+    const fetchCandidates = async () => {
+        try {
+            const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/candidates`);
+            setCandidates(res.data);
+        } catch (error) {
+            console.error('Failed to fetch candidates');
+        }
+    };
     useEffect(() => { fetchCandidates(); }, []);
     const handleFormChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
-    const handleAddCandidate = async (e) => { /* ... */ };
+    const handleAddCandidate = async (e) => {
+        e.preventDefault();
+        try {
+            await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/candidates`, formData);
+            setFormData({ name: '', email: '', role: '' });
+            fetchCandidates();
+        } catch (error) {
+            alert('Failed to add candidate. The email may already be in use.');
+        }
+    };
 
     return (
          <div>
