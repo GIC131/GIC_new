@@ -105,7 +105,12 @@ const CertificateManagerPage = () => {
             setFormData({ name: '', email: '', role: '' });
             setNewFiles([]);
             setNewFileTags([]);
-            await fetchCandidates();
+            // Optimistic UI: prepend the new candidate so QR shows immediately
+            if (createRes?.data) {
+                setCandidates((prev) => [{ ...createRes.data, documents: [] }, ...prev]);
+            }
+            // Background refresh
+            fetchCandidates();
         } catch (error) {
             alert('Failed to add candidate. The email may already be in use.');
         }
