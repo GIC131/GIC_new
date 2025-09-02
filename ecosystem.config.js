@@ -14,16 +14,16 @@ module.exports = {
     },
     {
       name: 'frontend-app',
-      cwd: './client', // Change working directory to the 'client' folder
+      cwd: './client', // Sets the correct directory for the frontend
       script: 'npm',
-      args: 'start',
+      args: 'start', // Runs the "start" script from package.json
       instances: 1,
       autorestart: true,
       watch: false,
       max_memory_restart: '1G',
       env: {
         NODE_ENV: 'production',
-        PORT: 3000, // Ensure Next.js starts on port 3000
+        PORT: 3000, // Ensures Next.js starts on the correct port
       },
     },
   ],
