@@ -181,7 +181,17 @@ const CertificateManagerPage = () => {
     };
 
     const handleSubmit = async (e) => {
+        // CRITICAL: Prevent form from submitting normally
         e.preventDefault();
+        e.stopPropagation();
+        
+        // Show immediate feedback that the function is called
+        alert('Form submission function called! This should prevent page reload.');
+        
+        console.log('=== FORM SUBMISSION STARTED ===');
+        console.log('Event type:', e.type);
+        console.log('Form data:', formData);
+        console.log('API URL:', API_URL);
         
         if (!formData.name || !formData.email || !formData.role) {
             setMessage('Please fill in all fields.');
@@ -192,7 +202,9 @@ const CertificateManagerPage = () => {
         setMessage('');
 
         try {
+            console.log('Making API call to create candidate...');
             const response = await axios.post(`${API_URL}/api/candidates`, formData);
+            console.log('Candidate created successfully:', response.data);
             
             // Clear form
             setFormData({ name: '', email: '', role: '' });
@@ -201,6 +213,7 @@ const CertificateManagerPage = () => {
             setCandidates(prev => [response.data, ...prev]);
             
             setMessage('Candidate added successfully!');
+            console.log('=== FORM SUBMISSION COMPLETED ===');
             
             // Clear message after 3 seconds
             setTimeout(() => setMessage(''), 3000);
@@ -239,7 +252,13 @@ const CertificateManagerPage = () => {
                         </div>
                     )}
 
-                    <form onSubmit={handleSubmit} className="grid md:grid-cols-4 gap-4 items-end">
+                    <form 
+                        onSubmit={handleSubmit} 
+                        className="grid md:grid-cols-4 gap-4 items-end" 
+                        noValidate
+                        method="POST"
+                        action="javascript:void(0);"
+                    >
                         <div>
                             <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
                                 Full Name *
@@ -300,10 +319,27 @@ const CertificateManagerPage = () => {
                             type="submit" 
                             disabled={isSubmitting}
                             className="bg-blue-600 text-white px-6 py-2 rounded-md font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                            onClick={(e) => {
+                                console.log('Button clicked - this should trigger form onSubmit');
+                            }}
                         >
                             {isSubmitting ? 'Adding...' : 'Add Candidate'}
                         </button>
                     </form>
+                    
+                    {/* Test Button */}
+                    <div className="mt-4">
+                        <button 
+                            type="button" 
+                            className="bg-green-500 text-white px-4 py-2 rounded-md font-medium hover:bg-green-600 transition-colors"
+                            onClick={() => {
+                                console.log('Test button clicked - JavaScript is working!');
+                                alert('Test button works! JavaScript is functioning.');
+                            }}
+                        >
+                            Test JavaScript (Click Me!)
+                        </button>
+                    </div>
                 </div>
 
                 {/* Existing Candidates */}
