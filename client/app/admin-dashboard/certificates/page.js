@@ -60,7 +60,7 @@ const CandidateCard = ({ candidate, onUpdate }) => {
                 <form onSubmit={handleUpload} className="mt-4 space-y-2">
                     <input type="file" onChange={handleFileChange} multiple className="text-xs text-dark-text file:mr-2 file:py-1 file:px-2 file:rounded-full file:border-0"/>
                     {files.length > 0 && files.map((file, index) => (
-                        <input key={index} type="text" placeholder={`Tag for ${file.name}`} value={tags[index]} onChange={(e) => handleTagChange(index, e.target.value)} required className="w-full bg-secondary text-xs p-1 rounded border border-slate-600"/>
+                        <input key={index} type="text" placeholder={`Tag for ${file.name}`} value={tags[index]} onChange={(e) => handleTagChange(index, e.target.value)} required autocomplete="off" className="w-full bg-secondary text-xs p-1 rounded border border-slate-600"/>
                     ))}
                     {files.length > 0 && <button type="submit" className="bg-accent text-primary text-xs font-bold py-1 px-3 rounded">Upload Docs</button>}
                 </form>
@@ -163,6 +163,7 @@ const CertificateManagerPage = () => {
                         onChange={handleFormChange} 
                         placeholder="Candidate Name" 
                         required 
+                        autocomplete="name"
                         className="bg-primary p-2 rounded-md border border-slate-600 text-light-text"
                     />
                     <input 
@@ -172,6 +173,7 @@ const CertificateManagerPage = () => {
                         onChange={handleFormChange} 
                         placeholder="Candidate Email" 
                         required 
+                        autocomplete="email"
                         className="bg-primary p-2 rounded-md border border-slate-600 text-light-text"
                     />
                     <input 
@@ -180,6 +182,7 @@ const CertificateManagerPage = () => {
                         onChange={handleFormChange} 
                         placeholder="Role (e.g., Intern)" 
                         required 
+                        autocomplete="organization-title"
                         className="bg-primary p-2 rounded-md border border-slate-600 text-light-text"
                     />
                     <div className="md:col-span-4 space-y-2">
@@ -200,6 +203,7 @@ const CertificateManagerPage = () => {
                                         value={newFileTags[idx]} 
                                         onChange={(e) => handleNewTagChange(idx, e.target.value)} 
                                         required 
+                                        autocomplete="off"
                                         className="bg-primary p-2 rounded-md border border-slate-600 text-light-text" 
                                     />
                                 ))}
