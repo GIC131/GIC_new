@@ -6,7 +6,6 @@ import Features from "@/components/Features";
 import FounderSection from "@/components/Foundersection";
 import Services from "@/components/Services";
 import Testimonials from "@/components/Testimonials";
-import Gallery from "@/components/Gallery";
 import ContactSection from "@/components/ContactSection";
 
 export default function Home() {
@@ -19,16 +18,6 @@ export default function Home() {
       <FounderSection />
       <Services />
       <Testimonials />
-      <Gallery
-        category="Event"
-        title="Event Gallery"
-        description="Highlights and moments from our events."
-      />
-      <Gallery
-        category="Career"
-        title="Career Gallery"
-        description="Snapshots from our career programs and achievements."
-      />
       <ContactSection />
     </div>
   );

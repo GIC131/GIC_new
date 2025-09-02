@@ -20,6 +20,7 @@ const Navbar = () => {
     { text: "Resume Building", link: "/resume-building" },
     { text: "Interview Questions", link: "/interview-questions" },
     { text: "Verify Certificate", link: "/verify-certificate" },
+    { text: "Contact", link: "/contact" }
     // The "Contact" link is now part of the main page, not duplicated here
   ];
 
