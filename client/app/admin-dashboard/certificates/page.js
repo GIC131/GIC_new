@@ -77,6 +77,8 @@ const CandidateCard = ({ candidate, onUpdate }) => {
 const CertificateManagerPage = () => {
     const [candidates, setCandidates] = useState([]);
     const [formData, setFormData] = useState({ name: '', email: '', role: '' });
+    const [newFiles, setNewFiles] = useState([]);
+    const [newFileTags, setNewFileTags] = useState([]);
     const fetchCandidates = async () => {
         try {
             const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/candidates`);
@@ -90,12 +92,35 @@ const CertificateManagerPage = () => {
     const handleAddCandidate = async (e) => {
         e.preventDefault();
         try {
-            await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/candidates`, formData);
+            const createRes = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/candidates`, formData);
+
+            // If files selected, immediately upload them with taglines
+            if (newFiles.length > 0 && createRes?.data?._id) {
+                const uploadForm = new FormData();
+                newFiles.forEach((file) => uploadForm.append('documents', file));
+                uploadForm.append('tags', newFileTags.join(','));
+                await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/candidates/${createRes.data._id}/upload`, uploadForm);
+            }
+
             setFormData({ name: '', email: '', role: '' });
-            fetchCandidates();
+            setNewFiles([]);
+            setNewFileTags([]);
+            await fetchCandidates();
         } catch (error) {
             alert('Failed to add candidate. The email may already be in use.');
         }
+    };
+
+    const handleNewFilesChange = (e) => {
+        const files = Array.from(e.target.files || []);
+        setNewFiles(files);
+        setNewFileTags(new Array(files.length).fill(''));
+    };
+
+    const handleNewTagChange = (index, value) => {
+        const copy = [...newFileTags];
+        copy[index] = value;
+        setNewFileTags(copy);
     };
 
     return (
@@ -103,11 +128,22 @@ const CertificateManagerPage = () => {
             <h1 className="text-3xl font-bold mb-6 text-light-text">Candidate Certificate Manager</h1>
             <div className="bg-secondary p-6 rounded-lg mb-8">
                 <h2 className="text-xl font-bold text-accent mb-4">Add New Candidate</h2>
-                <form onSubmit={handleAddCandidate} className="grid md:grid-cols-4 gap-4 items-center">
+                <form onSubmit={handleAddCandidate} className="grid md:grid-cols-4 gap-4 items-start">
                     <input name="name" value={formData.name} onChange={handleFormChange} placeholder="Candidate Name" required className="bg-primary p-2 rounded-md border border-slate-600"/>
                     <input name="email" type="email" value={formData.email} onChange={handleFormChange} placeholder="Candidate Email" required className="bg-primary p-2 rounded-md border border-slate-600"/>
                     <input name="role" value={formData.role} onChange={handleFormChange} placeholder="Role (e.g., Intern)" required className="bg-primary p-2 rounded-md border border-slate-600"/>
-                    <button type="submit" className="bg-accent text-primary font-bold rounded-md py-2">Add Candidate</button>
+                    <div className="md:col-span-4 space-y-2">
+                        <label className="block text-sm text-dark-text">Upload Documents (optional)</label>
+                        <input type="file" multiple onChange={handleNewFilesChange} className="text-sm text-dark-text file:mr-2 file:py-1 file:px-2 file:rounded-full file:border-0" />
+                        {newFiles.length > 0 && (
+                            <div className="grid md:grid-cols-2 gap-2">
+                                {newFiles.map((file, idx) => (
+                                    <input key={idx} type="text" placeholder={`Tagline for ${file.name}`} value={newFileTags[idx]} onChange={(e) => handleNewTagChange(idx, e.target.value)} required className="bg-primary p-2 rounded-md border border-slate-600" />
+                                ))}
+                            </div>
+                        )}
+                        <button type="submit" className="bg-accent text-primary font-bold rounded-md py-2 px-4">Add Candidate{newFiles.length > 0 ? ' & Upload Docs' : ''}</button>
+                    </div>
                 </form>
             </div>
             <div className="bg-secondary p-6 rounded-lg">

@@ -38,7 +38,8 @@ const CandidateManagementPage = () => {
         const file = e.target.files[0];
         if (!file) return;
         const uploadFormData = new FormData();
-        uploadFormData.append('document', file);
+        uploadFormData.append('documents', file);
+        uploadFormData.append('tags', '');
         try {
             await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/candidates/${candidateId}/upload`, uploadFormData);
             fetchCandidates();
