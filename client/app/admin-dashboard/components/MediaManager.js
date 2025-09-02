@@ -49,7 +49,7 @@ const MediaManager = ({ category }) => {
     return (
         <div>
             <h1 className="text-3xl font-bold text-light-text mb-6">{category} Gallery Management</h1>
-            <div className="mb-12"><ImageUpload onUploadSuccess={fetchMedia} /></div>
+            <div className="mb-12"><ImageUpload onUploadSuccess={fetchMedia} category={category} /></div>
             <div className="border-t border-slate-700 pt-8">
                 <h2 className="text-2xl font-bold text-accent mb-6">Uploaded Media</h2>
 

@@ -3,10 +3,10 @@
 import { useState } from 'react';
 import axios from 'axios';
 
-const ImageUpload = ({ onUploadSuccess }) => {
+const ImageUpload = ({ onUploadSuccess, category: presetCategory }) => {
   const [file, setFile] = useState(null);
   const [title, setTitle] = useState('');
-  const [category, setCategory] = useState(''); // <-- ADD category state
+  const [category, setCategory] = useState(presetCategory || ''); // allow preset via props
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -16,8 +16,8 @@ const ImageUpload = ({ onUploadSuccess }) => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    if (!file || !category) {
-      setMessage('Please select a file and a category.');
+    if (!file || !category || !title) {
+      setMessage('Please select a file, a category, and enter a tagline.');
       return;
     }
     setLoading(true);
@@ -37,7 +37,7 @@ const ImageUpload = ({ onUploadSuccess }) => {
       setMessage('Media uploaded successfully!');
       setFile(null);
       setTitle('');
-      setCategory('');
+      if (!presetCategory) setCategory('');
       e.target.reset();
       if (onUploadSuccess) {
         onUploadSuccess();
@@ -54,25 +54,26 @@ const ImageUpload = ({ onUploadSuccess }) => {
     <div className="bg-secondary p-8 rounded-lg border border-slate-700 max-w-lg mx-auto">
       <h2 className="text-2xl font-bold text-light-text mb-6">Upload New Media</h2>
       <form onSubmit={onSubmit} className="space-y-6">
-        {/* ADD THIS CATEGORY DROPDOWN */}
-        <div>
-          <label htmlFor="category" className="block text-sm font-medium text-dark-text mb-2">Category</label>
-          <select
-            id="category"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            required
-            className="w-full bg-primary border border-slate-600 rounded-md py-2 px-3 text-light-text focus:outline-none focus:ring-accent focus:border-accent"
-          >
-            <option value="">-- Select a Gallery --</option>
-            <option value="Event">Event Gallery</option>
-            <option value="Career">Career's Gallery</option>
-          </select>
-        </div>
+        {!presetCategory && (
+          <div>
+            <label htmlFor="category" className="block text-sm font-medium text-dark-text mb-2">Category</label>
+            <select
+              id="category"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              required
+              className="w-full bg-primary border border-slate-600 rounded-md py-2 px-3 text-light-text focus:outline-none focus:ring-accent focus:border-accent"
+            >
+              <option value="">-- Select a Gallery --</option>
+              <option value="Event">Event Gallery</option>
+              <option value="Career">Career's Gallery</option>
+            </select>
+          </div>
+        )}
 
         <div>
-          <label htmlFor="title" className="block text-sm font-medium text-dark-text mb-2">Title (Optional)</label>
-          <input type="text" id="title" value={title} onChange={(e) => setTitle(e.target.value)} className="w-full bg-primary border border-slate-600 rounded-md py-2 px-3 text-light-text" />
+          <label htmlFor="title" className="block text-sm font-medium text-dark-text mb-2">Tagline</label>
+          <input type="text" id="title" value={title} onChange={(e) => setTitle(e.target.value)} required placeholder="Short caption to show on the image" className="w-full bg-primary border border-slate-600 rounded-md py-2 px-3 text-light-text" />
         </div>
         <div>
           <label htmlFor="file" className="block text-sm font-medium text-dark-text mb-2">Image or Video File</label>
