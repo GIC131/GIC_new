@@ -95,7 +95,8 @@ const CertificateManagerPage = () => {
     
     const fetchCandidates = async () => {
         try {
-            const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/candidates`);
+            const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://getinteviewconfidence.com';
+            const res = await axios.get(`${API_URL}/api/candidates`);
             setCandidates(res.data);
         } catch (error) {
             console.error("Failed to fetch candidates", error);
@@ -108,10 +109,21 @@ const CertificateManagerPage = () => {
     
     const handleAddCandidate = async (e) => {
         e.preventDefault();
+        e.stopPropagation();
+        
+        console.log('Form submitted, preventing default behavior');
+        console.log('Form data:', formData);
+        
+        const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://getinteviewconfidence.com';
+        console.log('API URL:', API_URL);
+        
         try {
-            await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/candidates`, formData);
+            const response = await axios.post(`${API_URL}/api/candidates`, formData);
+            console.log('Candidate created successfully:', response.data);
+            
             setFormData({ name: '', email: '', role: '' });
             fetchCandidates();
+            alert('Candidate added successfully!');
         } catch (error) {
             console.error("Failed to add candidate:", error);
             alert("Failed to add candidate. The email may already be in use.");
@@ -128,7 +140,15 @@ const CertificateManagerPage = () => {
                     <input name="name" value={formData.name} onChange={handleFormChange} placeholder="Candidate Name" required className="bg-primary p-2 rounded-md border border-slate-600"/>
                     <input name="email" type="email" value={formData.email} onChange={handleFormChange} placeholder="Candidate Email" required className="bg-primary p-2 rounded-md border border-slate-600"/>
                     <input name="role" value={formData.role} onChange={handleFormChange} placeholder="Role (e.g., Intern)" required className="bg-primary p-2 rounded-md border border-slate-600"/>
-                    <button type="submit" className="bg-accent text-primary font-bold rounded-md py-2">Add Candidate</button>
+                    <button 
+                        type="submit" 
+                        className="bg-accent text-primary font-bold rounded-md py-2"
+                        onClick={(e) => {
+                            console.log('Button clicked - this should trigger form onSubmit');
+                        }}
+                    >
+                        Add Candidate
+                    </button>
                 </form>
             </div>
 
