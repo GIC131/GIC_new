@@ -188,6 +188,9 @@ const CertificateManagerPage = () => {
         // Prevent form from submitting normally
         e.preventDefault();
         
+        // Show immediate feedback that the function is called
+        alert('Form submission function called! This should prevent page reload.');
+        
         console.log('Form submitted, preventing default behavior');
         console.log('Form data:', formData);
         console.log('API URL:', API_URL);
@@ -314,6 +317,20 @@ const CertificateManagerPage = () => {
                             {isSubmitting ? 'Adding...' : 'Add Candidate'}
                         </button>
                     </form>
+                    
+                    {/* Test Button */}
+                    <div className="mt-4">
+                        <button 
+                            type="button" 
+                            className="bg-green-500 text-white px-4 py-2 rounded-md font-medium hover:bg-green-600 transition-colors"
+                            onClick={() => {
+                                console.log('Test button clicked - JavaScript is working!');
+                                alert('Test button works! JavaScript is functioning.');
+                            }}
+                        >
+                            Test JavaScript (Click Me!)
+                        </button>
+                    </div>
                 </div>
 
                 {/* Existing Candidates */}
