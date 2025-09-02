@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { QRCodeCanvas as QRCode } from 'qrcode.react';
 
-// This is the component for managing each individual candidate
+// This is a separate component for managing each individual candidate
 const CandidateCard = ({ candidate, onUpdate }) => {
     const [files, setFiles] = useState([]);
     const [tags, setTags] = useState([]);
@@ -32,7 +32,7 @@ const CandidateCard = ({ candidate, onUpdate }) => {
         try {
             await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/candidates/${candidate._id}/upload`, formData);
             alert('Documents uploaded successfully!');
-            setFiles([]);
+            setFiles([]); // Reset form
             setTags([]);
             e.target.reset();
             onUpdate(); // Refresh the main candidate list
@@ -42,21 +42,9 @@ const CandidateCard = ({ candidate, onUpdate }) => {
         }
     };
 
-    const handleDelete = async () => {
-        if (confirm(`Are you sure you want to delete all records for ${candidate.name}? This cannot be undone from the dashboard.`)) {
-            try {
-                await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/api/candidates/${candidate._id}`);
-                alert('Candidate deleted successfully.');
-                onUpdate(); // Refresh the main list
-            } catch (error) {
-                console.error('Delete failed:', error);
-                alert('Failed to delete candidate.');
-            }
-        }
-    };
-
     return (
         <div className="bg-primary p-4 rounded-lg flex flex-col md:flex-row justify-between items-start gap-4">
+            {/* Candidate Info & Docs */}
             <div className="flex-grow">
                 <h3 className="font-bold text-light-text text-lg">{candidate.name} ({candidate.role})</h3>
                 <p className="text-sm text-dark-text">{candidate.email}</p>
@@ -64,6 +52,7 @@ const CandidateCard = ({ candidate, onUpdate }) => {
                     {candidate.documents.map(doc => <li key={doc._id}>{doc.fileName}</li>)}
                 </ul>
                 
+                {/* Upload Form for THIS candidate */}
                 <form onSubmit={handleUpload} className="mt-4 space-y-2">
                     <input type="file" onChange={handleFileChange} multiple className="text-xs text-dark-text file:mr-2 file:py-1 file:px-2 file:rounded-full file:border-0"/>
                     {files.length > 0 && files.map((file, index) => (
@@ -71,11 +60,8 @@ const CandidateCard = ({ candidate, onUpdate }) => {
                     ))}
                     {files.length > 0 && <button type="submit" className="bg-accent text-primary text-xs font-bold py-1 px-3 rounded">Upload Docs</button>}
                 </form>
-                
-                <button onClick={handleDelete} className="text-xs text-red-500 hover:text-red-400 font-semibold mt-4">
-                    Delete Candidate
-                </button>
             </div>
+            {/* QR Code */}
             <div className="text-center bg-white p-2 rounded-md flex-shrink-0">
                 <QRCode value={`${window.location.origin}/candidate-docs/${candidate.secure_key}`} size={100} />
                 <p className="text-xs mt-1 text-gray-600 font-medium">Scan to View</p>
