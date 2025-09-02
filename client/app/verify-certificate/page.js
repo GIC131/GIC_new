@@ -12,7 +12,7 @@ const VerifyCertificatePage = () => {
     useEffect(() => {
         const fetchCandidates = async () => {
             try {
-                const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/candidates`);
+                const res = await axios.get(`https://getinteviewconfidence.com/api/candidates`);
                 setCandidates(res.data);
             } catch (error) { console.error("Failed to fetch candidates"); } 
             finally { setLoading(false); }

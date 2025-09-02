@@ -3,22 +3,22 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { QRCodeCanvas as QRCode } from 'qrcode.react';
 
-// Component for displaying each candidate with their files and QR code
+// Component for each candidate card
 const CandidateCard = ({ candidate, onUpdate }) => {
     const [files, setFiles] = useState([]);
-    const [tags, setTags] = useState([]);
+    const [descriptions, setDescriptions] = useState([]);
     const [isUploading, setIsUploading] = useState(false);
 
     const handleFileChange = (e) => {
         const selectedFiles = Array.from(e.target.files);
         setFiles(selectedFiles);
-        setTags(new Array(selectedFiles.length).fill(''));
+        setDescriptions(new Array(selectedFiles.length).fill(''));
     };
 
-    const handleTagChange = (index, value) => {
-        const newTags = [...tags];
-        newTags[index] = value;
-        setTags(newTags);
+    const handleDescriptionChange = (index, value) => {
+        const newDescriptions = [...descriptions];
+        newDescriptions[index] = value;
+        setDescriptions(newDescriptions);
     };
 
     const handleUpload = async (e) => {
@@ -28,13 +28,14 @@ const CandidateCard = ({ candidate, onUpdate }) => {
         setIsUploading(true);
         const formData = new FormData();
         files.forEach(file => formData.append('documents', file));
-        formData.append('tags', tags.join(','));
+        formData.append('tags', descriptions.join(','));
 
         try {
-            await axios.post(`${process.env.NEXT_PUBLIC_API_URL || 'https://getinteviewconfidence.com'}/api/candidates/${candidate._id}/upload`, formData);
-            alert('Documents uploaded successfully!');
+            const API_URL = 'https://getinteviewconfidence.com';
+            await axios.post(`${API_URL}/api/candidates/${candidate._id}/upload`, formData);
+            alert('Files uploaded successfully!');
             setFiles([]);
-            setTags([]);
+            setDescriptions([]);
             onUpdate(); // Refresh the list
         } catch (error) {
             console.error('File upload failed:', error);
@@ -47,7 +48,8 @@ const CandidateCard = ({ candidate, onUpdate }) => {
     const handleDelete = async () => {
         if (confirm(`Are you sure you want to delete ${candidate.name} and all their files?`)) {
             try {
-                await axios.delete(`${process.env.NEXT_PUBLIC_API_URL || 'https://getinteviewconfidence.com'}/api/candidates/${candidate._id}`);
+                const API_URL = 'https://getinteviewconfidence.com';
+                await axios.delete(`${API_URL}/api/candidates/${candidate._id}`);
                 alert('Candidate deleted successfully.');
                 onUpdate();
             } catch (error) {
@@ -58,22 +60,24 @@ const CandidateCard = ({ candidate, onUpdate }) => {
     };
 
     return (
-        <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+        <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200 mb-6">
             <div className="flex flex-col lg:flex-row gap-6">
-                {/* Candidate Info & Files */}
+                {/* Left side - Candidate info and file upload */}
                 <div className="flex-grow">
                     <div className="mb-4">
                         <h3 className="text-xl font-bold text-gray-800 mb-2">
-                            {candidate.name} 
-                            <span className="ml-2 px-3 py-1 bg-blue-100 text-blue-800 text-sm font-medium rounded-full">
+                            {candidate.name}
+                            <span className="ml-3 px-3 py-1 bg-blue-100 text-blue-800 text-sm font-medium rounded-full">
                                 {candidate.role}
                             </span>
                         </h3>
                         <p className="text-gray-600 mb-2">{candidate.email}</p>
-                        <p className="text-sm text-gray-500">Added: {new Date(candidate.createdAt).toLocaleDateString()}</p>
+                        <p className="text-sm text-gray-500">
+                            Added: {new Date(candidate.createdAt).toLocaleDateString()}
+                        </p>
                     </div>
 
-                    {/* Current Files */}
+                    {/* Current files */}
                     {candidate.documents && candidate.documents.length > 0 && (
                         <div className="mb-4">
                             <h4 className="font-semibold text-gray-700 mb-2">Current Files:</h4>
@@ -88,7 +92,7 @@ const CandidateCard = ({ candidate, onUpdate }) => {
                         </div>
                     )}
 
-                    {/* Upload New Files Form */}
+                    {/* File upload form */}
                     <form onSubmit={handleUpload} className="space-y-3">
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -109,8 +113,8 @@ const CandidateCard = ({ candidate, onUpdate }) => {
                                         key={index} 
                                         type="text" 
                                         placeholder={`Description for ${file.name}`} 
-                                        value={tags[index]} 
-                                        onChange={(e) => handleTagChange(index, e.target.value)} 
+                                        value={descriptions[index]} 
+                                        onChange={(e) => handleDescriptionChange(index, e.target.value)} 
                                         className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     />
                                 ))}
@@ -136,7 +140,7 @@ const CandidateCard = ({ candidate, onUpdate }) => {
                     </button>
                 </div>
 
-                {/* QR Code Section */}
+                {/* Right side - QR Code */}
                 <div className="flex-shrink-0">
                     <div className="bg-white p-4 rounded-lg border border-gray-200 text-center">
                         <QRCode 
@@ -160,7 +164,7 @@ const CertificateManagerPage = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [message, setMessage] = useState('');
 
-    const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://getinteviewconfidence.com';
+    const API_URL = 'https://getinteviewconfidence.com';
 
     const fetchCandidates = async () => {
         try {
@@ -181,15 +185,10 @@ const CertificateManagerPage = () => {
     };
 
     const handleSubmit = async (e) => {
-        // CRITICAL: Prevent form from submitting normally
+        // Prevent form from submitting normally
         e.preventDefault();
-        e.stopPropagation();
         
-        // Show immediate feedback that the function is called
-        alert('Form submission function called! This should prevent page reload.');
-        
-        console.log('=== FORM SUBMISSION STARTED ===');
-        console.log('Event type:', e.type);
+        console.log('Form submitted, preventing default behavior');
         console.log('Form data:', formData);
         console.log('API URL:', API_URL);
         
@@ -220,6 +219,7 @@ const CertificateManagerPage = () => {
             
         } catch (error) {
             console.error("Failed to add candidate:", error);
+            console.error("Error details:", error.response?.data);
             setMessage(error.response?.data?.msg || 'Failed to add candidate. Email may already be in use.');
         } finally {
             setIsSubmitting(false);
@@ -252,13 +252,7 @@ const CertificateManagerPage = () => {
                         </div>
                     )}
 
-                    <form 
-                        onSubmit={handleSubmit} 
-                        className="grid md:grid-cols-4 gap-4 items-end" 
-                        noValidate
-                        method="POST"
-                        action="javascript:void(0);"
-                    >
+                    <form onSubmit={handleSubmit} className="grid md:grid-cols-4 gap-4 items-end">
                         <div>
                             <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
                                 Full Name *
@@ -271,7 +265,6 @@ const CertificateManagerPage = () => {
                                 onChange={handleFormChange} 
                                 placeholder="Enter full name" 
                                 required 
-                                autocomplete="name"
                                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
                         </div>
@@ -288,7 +281,6 @@ const CertificateManagerPage = () => {
                                 onChange={handleFormChange} 
                                 placeholder="Enter email address" 
                                 required 
-                                autocomplete="email"
                                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
                         </div>
@@ -303,7 +295,6 @@ const CertificateManagerPage = () => {
                                 value={formData.role} 
                                 onChange={handleFormChange} 
                                 required 
-                                autocomplete="organization-title"
                                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             >
                                 <option value="">Select Role</option>
@@ -319,27 +310,10 @@ const CertificateManagerPage = () => {
                             type="submit" 
                             disabled={isSubmitting}
                             className="bg-blue-600 text-white px-6 py-2 rounded-md font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                            onClick={(e) => {
-                                console.log('Button clicked - this should trigger form onSubmit');
-                            }}
                         >
                             {isSubmitting ? 'Adding...' : 'Add Candidate'}
                         </button>
                     </form>
-                    
-                    {/* Test Button */}
-                    <div className="mt-4">
-                        <button 
-                            type="button" 
-                            className="bg-green-500 text-white px-4 py-2 rounded-md font-medium hover:bg-green-600 transition-colors"
-                            onClick={() => {
-                                console.log('Test button clicked - JavaScript is working!');
-                                alert('Test button works! JavaScript is functioning.');
-                            }}
-                        >
-                            Test JavaScript (Click Me!)
-                        </button>
-                    </div>
                 </div>
 
                 {/* Existing Candidates */}
@@ -353,7 +327,7 @@ const CertificateManagerPage = () => {
                             <p className="text-gray-500">No candidates found. Add your first candidate above to get started.</p>
                         </div>
                     ) : (
-                        <div className="space-y-6">
+                        <div>
                             {candidates.map(candidate => (
                                 <CandidateCard 
                                     key={candidate._id} 
