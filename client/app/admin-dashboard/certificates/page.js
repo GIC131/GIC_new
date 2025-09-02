@@ -108,24 +108,40 @@ const CertificateManagerPage = () => {
     const handleFormChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
     
     const handleAddCandidate = async (e) => {
+        // Prevent default form submission
         e.preventDefault();
         e.stopPropagation();
         
+        console.log('=== FORM SUBMISSION STARTED ===');
         console.log('Form submitted, preventing default behavior');
         console.log('Form data:', formData);
+        console.log('Event type:', e.type);
         
         const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://getinteviewconfidence.com';
         console.log('API URL:', API_URL);
         
+        // Validate form data
+        if (!formData.name || !formData.email || !formData.role) {
+            alert('Please fill in all required fields');
+            return;
+        }
+        
         try {
+            console.log('Making API call to create candidate...');
             const response = await axios.post(`${API_URL}/api/candidates`, formData);
             console.log('Candidate created successfully:', response.data);
             
+            // Clear form
             setFormData({ name: '', email: '', role: '' });
-            fetchCandidates();
+            
+            // Refresh the candidate list
+            await fetchCandidates();
+            
             alert('Candidate added successfully!');
+            console.log('=== FORM SUBMISSION COMPLETED ===');
         } catch (error) {
             console.error("Failed to add candidate:", error);
+            console.error("Error details:", error.response?.data);
             alert("Failed to add candidate. The email may already be in use.");
         }
     };
@@ -136,18 +152,54 @@ const CertificateManagerPage = () => {
             
             <div className="bg-secondary p-6 rounded-lg mb-8">
                 <h2 className="text-xl font-bold text-accent mb-4">Add New Candidate</h2>
-                <form onSubmit={handleAddCandidate} className="grid md:grid-cols-4 gap-4 items-center">
-                    <input name="name" value={formData.name} onChange={handleFormChange} placeholder="Candidate Name" required className="bg-primary p-2 rounded-md border border-slate-600"/>
-                    <input name="email" type="email" value={formData.email} onChange={handleFormChange} placeholder="Candidate Email" required className="bg-primary p-2 rounded-md border border-slate-600"/>
-                    <input name="role" value={formData.role} onChange={handleFormChange} placeholder="Role (e.g., Intern)" required className="bg-primary p-2 rounded-md border border-slate-600"/>
+                <form onSubmit={handleAddCandidate} className="grid md:grid-cols-4 gap-4 items-center" noValidate>
+                    <input 
+                        name="name" 
+                        value={formData.name} 
+                        onChange={handleFormChange} 
+                        placeholder="Candidate Name" 
+                        required 
+                        autocomplete="name"
+                        className="bg-primary p-2 rounded-md border border-slate-600 text-light-text"
+                    />
+                    <input 
+                        name="email" 
+                        type="email" 
+                        value={formData.email} 
+                        onChange={handleFormChange} 
+                        placeholder="Candidate Email" 
+                        required 
+                        autocomplete="email"
+                        className="bg-primary p-2 rounded-md border border-slate-600 text-light-text"
+                    />
+                    <input 
+                        name="role" 
+                        value={formData.role} 
+                        onChange={handleFormChange} 
+                        placeholder="Role (e.g., Intern)" 
+                        required 
+                        autocomplete="organization-title"
+                        className="bg-primary p-2 rounded-md border border-slate-600 text-light-text"
+                    />
                     <button 
                         type="submit" 
-                        className="bg-accent text-primary font-bold rounded-md py-2"
+                        className="bg-accent text-primary font-bold rounded-md py-2 hover:bg-accent/90 transition-colors"
                         onClick={(e) => {
                             console.log('Button clicked - this should trigger form onSubmit');
+                            // Don't prevent default here, let the form onSubmit handle it
                         }}
                     >
                         Add Candidate
+                    </button>
+                    <button 
+                        type="button" 
+                        className="bg-blue-500 text-white font-bold rounded-md py-2 hover:bg-blue-600 transition-colors"
+                        onClick={() => {
+                            console.log('Test button clicked - this should work without form submission');
+                            alert('Test button works! The JavaScript is functioning.');
+                        }}
+                    >
+                        Test Button
                     </button>
                 </form>
             </div>
