@@ -17,7 +17,7 @@ const FounderSection = () => {
 <div className="flex justify-center md:justify-end">
   <div className="relative w-96 h-96 md:w-[30rem] md:h-[30rem] overflow-hidden border-4 border-accent shadow-2xl">
     <Image
-      src="/images/founder.png"
+      src="/images/founder.jpg"
       alt="Ayushe Mandal, Founder & CEO"
       fill
       className="object-cover"
