@@ -2,7 +2,7 @@
 
 A comprehensive web platform for GetInterviewConfidence, designed to provide career counseling resources, job placement assistance, and dynamic content management for administrators. This project was built from the ground up using the MERN stack with a Next.js frontend for optimal performance and SEO.
 
-**Live Site:** [https://www.getinterviewconfidence.com](https://www.getinterviewconfidence.com)
+**Live Site:** [https://www.getinteviewconfidence.com](https://www.getinteviewconfidence.com)
 
 ---
 
